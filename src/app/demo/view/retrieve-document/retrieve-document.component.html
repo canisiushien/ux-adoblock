@@ -1,0 +1,60 @@
+<div class="grid">
+    <!-- paneau de demande et generation de clés -->
+    <div class="col-12">
+        <form (ngSubmit)="retrieveDocument()" #dtf="ngForm">
+            <div class="card p-fluid">
+                <!-- titre et bouton de genration -->
+                <h5>Authentification de document administratif</h5>
+
+				<!-- fichier pdf ou word -->
+				<div class="field">
+					<label htmlFor="docNum">Document numérique (PDF ou Word)<span class="p-error">*</span></label>
+					<p-fileUpload name="demo[]" [auto]="true" (onUpload)="onUpload($event)"
+					multiple=false accept=".pdf"accept=".docx"  maxFileSize="1000000" chooseLabel="Chargez le document administratif (PDF/Word)">
+						<ng-template pTemplate="content">
+							<ul *ngIf="uploadedFiles.length">
+								<li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+							</ul>
+						</ng-template>
+					</p-fileUpload>
+				</div>
+                <div class="field grid col-12">
+                    <button pButton pRipple type="submit" icon="pi pi-check-square" [disabled]="!dtf.form.valid" label="Vérifier l'authenticité du document" class="p-button-success mr-2 mb-2"></button>
+                </div>
+
+                <!-- cle privee -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="clePrivee" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à bien conserver">Clé privée : </label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText id="clePrivee" type="text"/>
+                    </div>
+                </div>
+                <!-- cle publique -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="clePublic" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à communiquer au public">Clé publique : </label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText id="clePublic" type="text"/>
+                    </div>
+                </div>
+                <!-- type de cle -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="typeCle" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le type d'algo cryptographique des clés générées">Type de clé : </label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText id="typeCle" type="text" readonly="true"/>
+                    </div>
+                </div>
+                <!-- courbe elliptique -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="ellipticCurve" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la courbe élliptique utilisée">Courbe élliptique : </label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText id="ellipticCurve" type="text" readonly="true"/>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-2 md:col-2 md:mb-0">
+                    <button type="reset" (click)="clear()" label="Effacer" class="p-button-filter mr-3 float-left" pButton icon="pi pi-trash"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

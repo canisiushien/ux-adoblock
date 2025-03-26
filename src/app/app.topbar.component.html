@@ -1,0 +1,36 @@
+<div class="layout-topbar">
+    <a href="#" class="layout-topbar-logo">
+        <img id="topbar-logo" src="assets/layout/images/logo-olympia.png">
+    </a>
+
+    <a href="#" class="layout-menu-button" (click)="app.onMenuButtonClick($event)">
+        <i class="pi pi-bars"></i>
+    </a>
+
+    <a href="#" class="layout-topbar-user" (click)="app.onTopbarMenuButtonClick($event)">
+        <img src="assets/layout/images/avatar.png" alt="olympia-layout" />
+    </a>
+
+    <ul  class="layout-topbar-usermenu" [ngClass]="{'layout-topbar-usermenu-active fadeInDown': app.topbarMenuActive}">
+        <li class="layout-topbar-usermenu-header">
+            <img src="assets/layout/images/avatar.png" alt="olympia-layout" />
+            <div class="layout-topbar-usermenu-info">
+                <div class="layout-topbar-usermenu-name">C. Urielle</div>
+                <div class="layout-topbar-usermenu-role">Administrator</div>
+            </div>
+        </li>
+        <li>
+            <a href="#" (click)="app.onTopbarSubItemClick($event)">
+                <i class="pi pi-fw pi-user"></i>
+                <span class="topbar-item-name">Profile</span>
+            </a>
+        </li>
+        <li #settings>
+            <a href="#">
+                <i class="pi pi-fw pi-cog"></i>
+                <span class="topbar-item-name">Settings</span>
+            </a>
+        </li>
+    </ul>
+
+</div>

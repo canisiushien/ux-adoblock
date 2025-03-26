@@ -1,0 +1,92 @@
+<div class="grid">
+	<!-- paneau de gauche: formulaire d'ajout -->
+	<div class="col-12 md:col-4">
+		<div class="card p-fluid">
+			<h5>Enregistrement de document administratif sur Ethereum</h5>
+			<form (ngSubmit)="addDocument()" #dtf="ngForm"> 
+				<!-- cle privee -->
+				<div class="field">
+					<label htmlFor="clePrivee">Clé privée du signataire<span class="p-error">*</span></label>
+					<textarea [required]="true" rows="5" cols="60" placeholder="Renseignez votre clé privée cryptographique" pInputTextarea id="clePrivee" name="clePrivee" [(ngModel)]="dataDocument.clePrivee"></textarea>
+				</div>
+				<!-- cle publique -->
+				<div class="field">
+					<label htmlFor="clePublique">Clé publique du signataire<span class="p-error">*</span></label>
+					<textarea [required]="true" rows="5" cols="60" placeholder="Renseignez votre clé publique cryptographique" pInputTextarea id="clePublique" name="clePublic" [(ngModel)]="dataDocument.clePublic"></textarea>
+				</div>
+				<!-- fichier pdf ou word -->
+				<div class="field">
+					<label htmlFor="docNum">Document numérique (PDF ou Word)<span class="p-error">*</span></label>
+					<p-fileUpload [auto]="true" (onSelect)="onFileSelect($event)"
+					multiple=false accept=".pdf, .doc, .docx" maxFileSize="1000000" chooseLabel="Chargez le document administratif (PDF/Word)">
+						<!--ng-template pTemplate="content">
+							<ul *ngIf="uploadedFiles.length">
+								<li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+							</ul>
+						</ng-template-->
+					</p-fileUpload>
+				</div>
+				<!-- boutons enregistrement et vidage formulaire -->
+				<div class="field">
+					<button pButton pRipple type="submit" [disabled]="!dtf.form.valid" icon="pi pi-check" label="Enregistrer le document sur Ethereum" class="p-button-success mr-2 mb-2"></button>
+					<button pButton pRipple type="reset" (click)="clear()" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info p-button-text mr-2 mb-2"></button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- paneau de droite: affichage -->
+	<div class="col-12 md:col-8">
+		<div class="card p-fluid">
+			<h5>Résultat de l'enregistrement</h5>
+			<div class="field grid">
+				<label htmlFor="nomDocument" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le document enregistré">Document soumis : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="nomDocument" name="documentName" [(ngModel)]="addResponse.documentName" disabled/>
+				</div>
+			</div>
+            <div class="field grid">
+				<label htmlFor="idTransaction" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le hash de la transaction">ID transaction : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="idTransaction" name="idTransaction" [(ngModel)]="addResponse.idTransaction" disabled/>
+				</div>
+			</div>
+			<div class="field grid">
+				<label htmlFor="statutTransaction" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="l'état d'execution de la transaction">Statut de la transaction : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="statutTransaction" name="statut" [(ngModel)]="addResponse.statut"/>
+				</div>
+			</div>
+			<div class="field grid">
+				<label htmlFor="numBloc" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le numéro du block contenant la transaction">N° Bloc : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="numBloc" name="numeroBlock" [(ngModel)]="addResponse.numeroBlock"/>
+				</div>
+			</div>
+            <div class="field grid">
+				<label htmlFor="addrSmartContract" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="l'adresse du contrat intelligent exécuté">Adresse du contrat inteligent : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="addrSmartContract" name="addressContrat" [(ngModel)]="addResponse.addressContrat"/>
+				</div>
+			</div>
+            <div class="field grid">
+				<label htmlFor="totalBlockGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la somme totale du gaz utilisé par toutes les transactions incluses dans le bloc">Gaz total utilisé pour le bloc : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="totalBlockGasUtilise" name="totalBlockGasUtilise" [(ngModel)]="addResponse.totalBlockGasUtilise"/>
+				</div>
+			</div>
+            <div class="field grid">
+				<label htmlFor="totalTransactionGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la quantité de gaz réellement consommée pour exécuter la transaction">Gaz réellement consommé pour la transaction : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="totalTransactionGasUtilise" name="totalTransactionGasUtilise" [(ngModel)]="addResponse.totalTransactionGasUtilise"/>
+				</div>
+			</div>
+            <div class="field grid">
+				<label htmlFor="prixReelTransaction" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le prix réel de gaz payé pour la transaction">Prix réel du gaz payé pour la transaction : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="prixReelTransaction" name="prixReelTransaction" [(ngModel)]="addResponse.prixReelTransaction"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

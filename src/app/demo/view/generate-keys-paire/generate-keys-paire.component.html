@@ -1,0 +1,65 @@
+<div class="grid">
+    <!-- paneau d'avertissement -->
+    <div class="col-12">
+        <div class="card">
+            <p-panel header="Avertissement de sécurité" [toggleable]="true" class="line-height-3 m-0">
+                <p-tag styleClass="mr-2" icon="pi pi-info-circle" severity="warning" [rounded]="true" value="Comment gérer votre clé privée ?"></p-tag>
+                <p>La paire de clés que nous générons pour vous sont basées sur l'algorithme ECDSA. Votre <b>clé publique</b> est accessible à tout le monde, notamment les destinataires des documents signés par vous. Cette clé est utilisée pour déchiffrer/vérifier votre signature numérique.
+                La <b>clé privée</b> sert à signer vos documents. Cette clé doit rester exclusivement privée et personnelle. Une fois générée pour vous, nous ne la stockons pas. <b>Elle est donc entièrement sous votre unique responsabilité</b>. Veuillez régénérer une nouvelle paire de clés si toutefois votre clé privée viendrait à être compromise.</p>
+            </p-panel>
+        </div>
+    </div>
+
+    <!-- paneau de demande et generation de clés -->
+    <div class="col-12">
+        <form (ngSubmit)="keysGenerator()" #dtf="ngForm">
+            <div class="card p-fluid">
+                <!-- titre et bouton de genration -->
+                <h5>Génération de paire de clés cryptographiques</h5>
+                <div class="field grid col-12">
+                    <button pButton pRipple type="submit" icon="pi pi-key" [disabled]="!dtf.form.valid" label="Générer la paire de clés cryptographiques" class="p-button-success mr-2 mb-2"></button>
+                </div>
+
+                <!-- cle privee -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="clePrivee" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à bien conserver"><b>Clé privée : </b></label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText type="text" id="clePrivee" name="clePrivee" [(ngModel)]="keysPair.privateKey"/>
+                    </div>
+                </div>
+                <!-- cle publique -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="clePublic" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à communiquer au public"><b>Clé publique : </b></label>
+                    <div class="col-12 md:col-10">
+                        <textarea rows="3" cols="60" pInputTextarea id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey"></textarea>
+                        <!--input pInputText type="text" id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey"/-->
+                    </div>
+                </div>
+                <!-- type de cle -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="typeCle" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le type d'algo cryptographique des clés générées"><b>Type de clé : </b></label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText type="text" id="typeCle" name="typeCle" [(ngModel)]="keysPair.typeKey" disabled/>
+                    </div>
+                </div>
+                <!-- courbe elliptique -->
+                <div class="field grid col-12 md:col-12">
+                    <label htmlFor="ellipticCurve" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la courbe élliptique utilisée"><b>Courbe élliptique : </b></label>
+                    <div class="col-12 md:col-10">
+                        <input pInputText type="text" id="ellipticCurve" name="ellipticCurve" [(ngModel)]="keysPair.ellipticCurve" disabled/>
+                    </div>
+                </div>
+
+                <div class="field grid col-12 md:col-12">
+                    <div class="col-12 md:col-2">
+                        <button pButton pRipple type="reset" (click)="clear()" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info p-button-text mr-2 mb-2"></button>
+                    </div>
+                    <div class="col-12 md:col-10">
+                        <button type="button" (click)="downloadKeys()" label="Télécharger (dans un fichier) les clés générées" class="p-button-filter mr-3 float-left" pButton icon="pi pi-upload"></button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
