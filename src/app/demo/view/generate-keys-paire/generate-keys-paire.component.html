@@ -17,22 +17,23 @@
                 <!-- titre et bouton de genration -->
                 <h5>Génération de paire de clés cryptographiques</h5>
                 <div class="field grid col-12">
-                    <button pButton pRipple type="submit" icon="pi pi-key" [disabled]="!dtf.form.valid" label="Générer la paire de clés cryptographiques" class="p-button-success mr-2 mb-2"></button>
+                    <button pButton pRipple type="submit" icon="pi pi-key" [disabled]="!dtf.form.valid" label="Générer la paire de clés cryptographiques" class="p-button-success font-bold mr-2 mb-2"></button>
                 </div>
 
                 <!-- cle privee -->
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="clePrivee" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à bien conserver"><b>Clé privée : </b></label>
-                    <div class="col-12 md:col-10">
-                        <input pInputText type="text" id="clePrivee" name="clePrivee" [(ngModel)]="keysPair.privateKey"/>
+                    <div class="col-12 md:col-10 textarea-container">
+                        <input pInputText type="text" id="clePrivee" name="clePrivee" [(ngModel)]="keysPair.privateKey" readonly/>
+                        <button pButton type="button" icon="pi pi-copy" class="copy-btn" (click)="copyToClipboard(keysPair.privateKey)" pTooltip="Copier" tooltipPosition="top"></button>
                     </div>
                 </div>
                 <!-- cle publique -->
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="clePublic" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à communiquer au public"><b>Clé publique : </b></label>
-                    <div class="col-12 md:col-10">
-                        <textarea rows="3" cols="60" pInputTextarea id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey"></textarea>
-                        <!--input pInputText type="text" id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey"/-->
+                    <div class="col-12 md:col-10 textarea-container">
+                        <textarea rows="3" cols="50" pInputTextarea id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey" readonly></textarea>
+                        <button pButton type="button" icon="pi pi-copy" class="copy-btn" (click)="copyToClipboard(keysPair.publicKey)" pTooltip="Copier" tooltipPosition="top"></button>
                     </div>
                 </div>
                 <!-- type de cle -->
@@ -52,10 +53,10 @@
 
                 <div class="field grid col-12 md:col-12">
                     <div class="col-12 md:col-2">
-                        <button pButton pRipple type="reset" (click)="clear()" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info p-button-text mr-2 mb-2"></button>
+                        <button pButton pRipple type="reset" (click)="clear()" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info font-bold p-button-text mr-2 mb-2"></button>
                     </div>
                     <div class="col-12 md:col-10">
-                        <button type="button" (click)="downloadKeys()" label="Télécharger (dans un fichier) les clés générées" class="p-button-filter mr-3 float-left" pButton icon="pi pi-upload"></button>
+                        <button type="button" (click)="downloadKeys()" label="Télécharger (dans un fichier) les clés générées" class="p-button-filter font-bold mr-3 float-left" pButton icon="pi pi-upload"></button>
                     </div>
                 </div>
 

@@ -3,6 +3,7 @@ import { IKeysPair, KeysPair } from '../../domain/keys-pair';
 import { Message } from 'primeng/api/message';
 import { DocumentService } from '../../service/document-service';
 import { NgForm } from '@angular/forms';
+import { ZipperService } from '../../service/zipper-service';
 
 @Component({
   selector: 'app-generate-keys-paire',
@@ -17,7 +18,7 @@ export class GenerateKeysPaireComponent {
   timeoutHandle: any;
 
   //=========== constructeur ===================
-  constructor(private documentService: DocumentService){}
+  constructor(private readonly documentService: DocumentService, private readonly zipper: ZipperService){}
 
    //=========== methodes et fonctions ===================
   //generer une paire de clés
@@ -26,7 +27,6 @@ export class GenerateKeysPaireComponent {
         this.documentService.generateKeysPair().subscribe({
           next: (response) => {
             this.keysPair = response.body;
-            console.log("Paire de clés = ",this.keysPair);
             this.showMessage({
               severity: 'success',
               summary: 'Paire de clés cryptographiques générée avec succès',
@@ -40,8 +40,19 @@ export class GenerateKeysPaireComponent {
     }
   }
 
+  //pour copier la valeur de la clé en un clic
+  copyToClipboard(value: string): void {
+    //le texte est copié dans le presse-papiers via le navigator.clipboard.writeText(value)
+    navigator.clipboard.writeText(value).then(() => {
+      console.log('Clé copiée avec succès !');
+    }).catch(err => {
+      console.error('Erreur lors de la copie de la clé :', err);
+    });
+  }
+
+  //genere et telecharge le zip contenant les fichiers necessaires
   downloadKeys(): void {
-    
+    this.zipper.generateAndDownloadZip(this.keysPair.publicKey, this.keysPair.privateKey);
   }
 
 

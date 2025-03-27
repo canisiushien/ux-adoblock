@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IKeysPair } from '../domain/keys-pair';
 import { IAddResponse } from '../domain/add-response';
@@ -17,7 +17,7 @@ type EntityVerifDocResponseType = HttpResponse<IVerifResponse>;
 
 export class DocumentService {
 
-    constructor(private http:HttpClient) { }
+    constructor(private readonly http:HttpClient) { }
 
     /**
      * service de genration des clés privée et publique
