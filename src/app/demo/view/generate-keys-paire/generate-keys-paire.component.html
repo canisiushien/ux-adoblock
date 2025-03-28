@@ -24,7 +24,7 @@
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="clePrivee" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à bien conserver"><b>Clé privée : </b></label>
                     <div class="col-12 md:col-10 textarea-container">
-                        <input pInputText type="text" id="clePrivee" name="clePrivee" [(ngModel)]="keysPair.privateKey" readonly/>
+                        <input pInputText type="text" id="clePrivee" name="privateKey" [(ngModel)]="keysPair.privateKey" readonly/>
                         <button pButton type="button" icon="pi pi-copy" class="copy-btn" (click)="copyToClipboard(keysPair.privateKey)" pTooltip="Copier" tooltipPosition="top"></button>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="clePublic" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé publique à communiquer au public"><b>Clé publique : </b></label>
                     <div class="col-12 md:col-10 textarea-container">
-                        <textarea rows="3" cols="50" pInputTextarea id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey" readonly></textarea>
+                        <textarea rows="3" cols="50" pInputTextarea id="clePublic" name="publicKey" [(ngModel)]="keysPair.publicKey" readonly></textarea>
                         <button pButton type="button" icon="pi pi-copy" class="copy-btn" (click)="copyToClipboard(keysPair.publicKey)" pTooltip="Copier" tooltipPosition="top"></button>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="typeCle" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le type d'algo cryptographique des clés générées"><b>Type de clé : </b></label>
                     <div class="col-12 md:col-10">
-                        <input pInputText type="text" id="typeCle" name="typeCle" [(ngModel)]="keysPair.typeKey" disabled/>
+                        <input pInputText type="text" id="typeCle" name="typeKey" [(ngModel)]="keysPair.typeKey" disabled/>
                     </div>
                 </div>
                 <!-- courbe elliptique -->

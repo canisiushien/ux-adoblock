@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { IAddResponse, AddResponse } from '../../domain/add-response';
 import { Message, MessageService } from 'primeng/api';
 import { DocumentService } from '../../service/document-service';
+import { IVerifResponse, VerifResponse } from '../../domain/verif-response';
 
 @Component({
   selector: 'app-retrieve-document',
@@ -13,22 +13,48 @@ import { DocumentService } from '../../service/document-service';
 export class RetrieveDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
-  addResponse: IAddResponse = new AddResponse();
+  verifResponse: IVerifResponse = new VerifResponse();
   message: any;
   timeoutHandle: any;
   uploadedFiles: any[] = [];
+  selectedFile: File | null = null;
+  fichierDocCharge: boolean = false;
+  demandeTransaction: boolean = false;
 
-  constructor(private messageService: MessageService, private documentService: DocumentService) {}
+  constructor(private readonly messageService: MessageService, private readonly documentService: DocumentService) {}
 
-  onUpload(event) {
-    for (const file of event.files) {
-        this.uploadedFiles.push(file);
+ // Gestion de la sélection du fichier de document administratif
+ onFileSelect(event: any): void {
+  this.fichierDocCharge = event.files.length > 0;  // Vérifie si le fichier PDF/Word est chargé
+  const file: File = event.files[0];
+
+    if (file) {
+      // Vérification du type de fichier
+      const allowedTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/pdf"];
+      if (!allowedTypes.includes(file.type)) {
+        console.error("Type de fichier non autorisé !");
+        return;
+      }
+      this.selectedFile = file;
     }
-    this.messageService.add({severity: 'info', summary: 'Success', detail: 'Document chargé avec succès.'});
-}
+  }
 
-retrieveDocument() {
-}
+  //authentifier le document sur la blockchain
+  retrieveDocument() {
+    if(this.selectedFile) {
+      //initialisation du formData
+      const formData: FormData = new FormData();
+      formData.append("file", this.selectedFile);
+      //appel de l'api
+      this.documentService.authenticateDocumentFromEthereum(formData).subscribe(response =>
+        {
+          //recuperation de l'objet reponse de l'api
+          this.verifResponse = response.body;
+          this.demandeTransaction = true;
+        }
+      )
+    }
+  }
 
   //recuperer api message retour
   showMessage(message: Message) {
@@ -41,5 +67,6 @@ retrieveDocument() {
   //vider le formulaire au clic du bouton Effacer
   clear(): void {
     this.form.resetForm();
+    this.demandeTransaction = false;
   }
 }

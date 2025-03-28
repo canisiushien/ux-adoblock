@@ -6,32 +6,32 @@
 			<form (ngSubmit)="addDocument()" #dtf="ngForm">
 				<!-- Charger le fichier .crt de clés -->
 				<div class="field">
-					<label htmlFor="fichierCrt">Charger le fichier .crt de clés</label>
-					<p-fileUpload #fu1 [auto]="true" (onSelect)="onCrtFileSelect($event)" fileLimit="1" class="full-width"
+					<label htmlFor="fichierCrt" class="font-bold">Charger le fichier .crt de clés</label>
+					<p-fileUpload #fu1 [auto]="true" (onSelect)="onCrtFileSelect($event)" fileLimit="1" class="full-width font-bold"
 					multiple=false accept=".crt" invalidFileTypeMessageSummary="Type de fichier non autorisé" maxFileSize="1000000" invalidFileSizeMessageSummary="Votre fichier est trop volumineux" chooseLabel="Chargez le fichier .crt de clés">
 					</p-fileUpload>
 				</div>
 				<!-- cle privee (désactivée si fichier .crt est chargé) -->
 				<div class="field">
-					<label htmlFor="clePrivee">Clé privée du signataire<span class="p-error" *ngIf="!fichierCrtCharge">*</span></label>
+					<label htmlFor="clePrivee" class="font-bold">Clé privée du signataire<span class="p-error" *ngIf="!fichierCrtCharge">*</span></label>
 					<textarea [disabled]="fichierCrtCharge" [required]="!fichierCrtCharge" rows="3" cols="50" placeholder="Renseignez votre clé privée cryptographique" pInputTextarea id="clePrivee" name="clePrivee" [(ngModel)]="dataDocument.clePrivee"></textarea>
 				</div>
 				<!-- cle publique (désactivée si fichier .crt est chargé) -->
 				<div class="field">
-					<label htmlFor="clePublique">Clé publique du signataire<span class="p-error" *ngIf="!fichierCrtCharge">*</span></label>
+					<label htmlFor="clePublique" class="font-bold">Clé publique du signataire<span class="p-error" *ngIf="!fichierCrtCharge">*</span></label>
 					<textarea [disabled]="fichierCrtCharge" [required]="!fichierCrtCharge" rows="3" cols="50" placeholder="Renseignez votre clé publique cryptographique" pInputTextarea id="clePublique" name="clePublic" [(ngModel)]="dataDocument.clePublic"></textarea>
 				</div>
 				<!-- fichier pdf ou word (toujours requis) -->
 				<div class="field">
-					<label htmlFor="docNum">Document numérique (PDF ou Word)<span class="p-error">*</span></label>
+					<label htmlFor="docNum" class="font-bold">Document numérique (PDF ou Word)<span class="p-error">*</span></label>
 					<p-fileUpload #fu2 [auto]="true" (onSelect)="onFileSelect($event)" fileLimit="1"
 					multiple=false accept=".pdf, .doc, .docx" invalidFileTypeMessageSummary="Type de fichier non autorisé" maxFileSize="1000000" invalidFileSizeMessageSummary="Votre fichier est trop volumineux" chooseLabel="Chargez le document administratif (PDF/Word)">
 					</p-fileUpload>
 				</div>
 				<!-- boutons enregistrement et vidage formulaire -->
 				<div class="field">
-					<button pButton pRipple type="submit" [disabled]="!formValide()" icon="pi pi-check" label="Enregistrer le document sur Ethereum" class="p-button-success mr-2 mb-2"></button>
-					<button pButton pRipple type="reset" (click)="clear(fu1, fu2)" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info p-button-text mr-2 mb-2"></button>
+					<button pButton pRipple type="submit" [disabled]="!formValide()" icon="pi pi-check" label="Enregistrer le document sur Ethereum" class="p-button-success font-bold mr-2 mb-2"></button>
+					<button pButton pRipple type="reset" (click)="clear(fu1, fu2)" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info p-button-text font-bold mr-2 mb-2"></button>
 				</div>
 			</form>
 		</div>
@@ -42,49 +42,49 @@
 		<div class="card p-fluid">
 			<h5>Résultat de l'enregistrement</h5>
 			<div class="field grid">
-				<label htmlFor="nomDocument" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le document enregistré sur la blockchain">Document soumis : </label>
+				<label htmlFor="nomDocument" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="le document enregistré sur la blockchain">Document soumis : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="nomDocument" name="documentName" [(ngModel)]="addResponse.documentName" disabled/>
 				</div>
 			</div>
             <div class="field grid">
-				<label htmlFor="idTransaction" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le hash de la transaction blockchain">ID transaction : </label>
+				<label htmlFor="idTransaction" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="le hash de la transaction blockchain">ID transaction : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="idTransaction" name="idTransaction" [(ngModel)]="addResponse.idTransaction" disabled/>
 				</div>
 			</div>
 			<div class="field grid">
-				<label htmlFor="statutTransaction" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="l'état d'execution de la transaction blockchain">Statut de la transaction : </label>
+				<label htmlFor="statutTransaction" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="l'état d'execution de la transaction blockchain">Statut de la transaction : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="statutTransaction" name="statut" [(ngModel)]="addResponse.statut"/>
 				</div>
 			</div>
 			<div class="field grid">
-				<label htmlFor="numBloc" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le numéro du block contenant la transaction blockchain">N° Bloc : </label>
+				<label htmlFor="numBloc" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="le numéro du block contenant la transaction blockchain">N° Bloc : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="numBloc" name="numeroBlock" [(ngModel)]="addResponse.numeroBlock"/>
 				</div>
 			</div>
             <div class="field grid">
-				<label htmlFor="addrSmartContract" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="l'adresse du contrat intelligent exécuté sur blockchain">Adresse du contrat inteligent : </label>
+				<label htmlFor="addrSmartContract" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="l'adresse du contrat intelligent exécuté sur blockchain">Adresse du contrat inteligent : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="addrSmartContract" name="addressContrat" [(ngModel)]="addResponse.addressContrat"/>
 				</div>
 			</div>
             <div class="field grid">
-				<label htmlFor="totalBlockGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la somme totale du gaz utilisé par toutes les transactions blockchain incluses dans le bloc">Gaz total utilisé pour le bloc : </label>
+				<label htmlFor="totalBlockGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="la somme totale du gaz utilisé par toutes les transactions blockchain incluses dans le bloc">Gaz total utilisé pour le bloc : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="totalBlockGasUtilise" name="totalBlockGasUtilise" [(ngModel)]="addResponse.totalBlockGasUtilise"/>
 				</div>
 			</div>
             <div class="field grid">
-				<label htmlFor="totalTransactionGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la quantité de gaz réellement consommée pour exécuter la transaction blockchain">Gaz réellement consommé pour la transaction : </label>
+				<label htmlFor="totalTransactionGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="la quantité de gaz réellement consommée pour exécuter la transaction blockchain">Gaz réellement consommé pour la transaction : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="totalTransactionGasUtilise" name="totalTransactionGasUtilise" [(ngModel)]="addResponse.totalTransactionGasUtilise"/>
 				</div>
 			</div>
             <div class="field grid">
-				<label htmlFor="prixReelTransaction" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la transaction : </label>
+				<label htmlFor="prixReelTransaction" class="col-12 mb-2 md:col-2 md:mb-0 font-bold" pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la transaction : </label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="prixReelTransaction" name="prixReelTransaction" [(ngModel)]="addResponse.prixReelTransaction"/>
 				</div>
