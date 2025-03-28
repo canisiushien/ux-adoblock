@@ -30,7 +30,7 @@
                 </div>
                 <!-- cle publique -->
                 <div class="field grid col-12 md:col-12">
-                    <label htmlFor="clePublic" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé privée à communiquer au public"><b>Clé publique : </b></label>
+                    <label htmlFor="clePublic" class="col-12 mb-2 md:col-2 md:mb-0" pTooltip="la clé publique à communiquer au public"><b>Clé publique : </b></label>
                     <div class="col-12 md:col-10 textarea-container">
                         <textarea rows="3" cols="50" pInputTextarea id="clePublic" name="clePublic" [(ngModel)]="keysPair.publicKey" readonly></textarea>
                         <button pButton type="button" icon="pi pi-copy" class="copy-btn" (click)="copyToClipboard(keysPair.publicKey)" pTooltip="Copier" tooltipPosition="top"></button>
@@ -56,7 +56,7 @@
                         <button pButton pRipple type="reset" (click)="clear()" label="Effacer le formulaire" icon="pi pi-times" class="p-button-info font-bold p-button-text mr-2 mb-2"></button>
                     </div>
                     <div class="col-12 md:col-10">
-                        <button type="button" (click)="downloadKeys()" label="Télécharger (dans un fichier) les clés générées" class="p-button-filter font-bold mr-3 float-left" pButton icon="pi pi-upload"></button>
+                        <button type="button" [disabled]="keysPair.publicKey == null || keysPair.privateKey == null" (click)="downloadKeys()" label="Télécharger (dans un fichier) les clés générées" class="p-button-filter font-bold mr-3 float-left" pButton icon="pi pi-upload"></button>
                     </div>
                 </div>
 

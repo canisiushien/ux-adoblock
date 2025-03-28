@@ -9,7 +9,9 @@ export interface IDataDocument {
 
     clePublic?: string;
 
-    fichier?: File;
+    docAdminFile?: File;
+
+    keysFile?: File;
 }
 
 export class DataDocument implements IDataDocument {
@@ -18,6 +20,8 @@ export class DataDocument implements IDataDocument {
 
         public clePublic?: string,
     
-        public fichier?: File
+        public docAdminFile?: File,
+
+        public keysFile?: File
     ){}
 }
