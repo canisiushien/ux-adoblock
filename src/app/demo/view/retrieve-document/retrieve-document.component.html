@@ -41,7 +41,7 @@
     <!-- paneau de reponse à la demande d'authentification -->
     <div class="col-12">
         <div class="card p-fluid">
-            <p-fieldset legend="Réponse d'authentification de document administratif -Ethereum 2." toggleable="true">
+            <p-fieldset legend="Réponse d'authentification de document administratif -Ethereum 2.0" toggleable="true">
                 <p *ngIf="demandeTransaction">
                     <p-tag *ngIf="verifResponse.authenticated" styleClass="mr-2" icon="pi pi-check" severity="success" [rounded]="true" value=" Le document est authentique "></p-tag>
                     <p-tag *ngIf="!verifResponse.authenticated" styleClass="mr-2" icon="pi pi-times" severity="danger" [rounded]="true" value=" Le document n'est pas authentique "></p-tag>
