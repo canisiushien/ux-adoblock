@@ -1,0 +1,103 @@
+<!-- landing.component.html -->
+ <div class="landing-body">
+    <div class="landing-wrapper">
+        <div id="home" class="landing-header">
+          <div class="landing-topbar">
+            <img src="../layout/images/logo-olympia-white.png" alt="olympia-layout"/>
+            <span class="app-title">Olympia</span>
+            <a href="#" id="landing-menu-button">
+              <i class="pi pi-bars"></i>
+            </a>
+            <ul id="landing-menu">
+              <li><a href="#home">HOME</a></li>
+              <li><a href="#features">FEATURES</a></li>
+              <li><a href="#news">NEWS</a></li>
+              <li><a href="#pricing">PRICING</a></li>
+              <li><a href="#multimedia">MULTIMEDIA</a></li>
+            </ul>
+          </div>
+          <div class="landing-header-content">
+            <h1>PrimeNG Presents Olympia</h1>
+            <p>Modern and elegant responsive application template with a premium look for PrimeNG components.</p>
+            <button pButton type="button" label="Go to Dashboard"></button>
+          </div>
+        </div>
+      
+        <div id="features" class="landing-features">
+          <div class="grid">
+            <ng-container *ngFor="let feature of features">
+              <div class="col-12 lg:col-6">
+                <div class="feature-box">
+                  <img [src]="feature.img" [alt]="feature.title" />
+                  <div>
+                    <h5>{{ feature.title }}</h5>
+                    <p>{{ feature.description }}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      
+        <div id="news" class="landing-news">
+          <h5>PrimeNG Premium Template</h5>
+          <p>Take advantage of media's most prominent business trend, and empower your internal advertising teams.</p>
+          <button pButton type="button" label="Learn More"></button>
+        </div>
+      
+        <div id="pricing" class="landing-pricing">
+          <div class="grid">
+            <ng-container *ngFor="let plan of pricingPlans">
+              <div class="col-12 lg:col-4">
+                <div class="pricing-box">
+                  <div class="pricing-box-header">
+                    <h5>{{ plan.name }}</h5>
+                    <span>{{ plan.price }}</span>
+                  </div>
+                  <div class="pricing-box-content">
+                    <ul>
+                      <li *ngFor="let feature of plan.features">
+                        <i class="pi pi-check"></i> {{ feature }}
+                      </li>
+                    </ul>
+                    <button pButton type="button" label="Buy Now"></button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      
+        <div id="multimedia" class="landing-multimedia">
+          <h5>MULTIMEDIA</h5>
+          <p>Duis nec lobortis massa, sed facilisis lorem. In hac habitasse platea dictumst.</p>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/OgwFrGMb8Y8" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+      
+        <div class="landing-footer">
+          <div class="grid">
+            <div class="col-12 lg:col-3">
+              <img src="../layout/images/logo-olympia-white.png" alt="olympia-layout" />
+            </div>
+            <div class="col-12 lg:col-2" *ngFor="let column of footerLinks">
+              <h6>{{ column.title }}</h6>
+              <ul>
+                <li *ngFor="let link of column.links">
+                  <a href="#">{{ link }}</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-12 lg:col-3">
+              <h6>SOCIAL</h6>
+              <a href="#"><i class="pi pi-twitter"></i></a>
+              <a href="#"><i class="pi pi-facebook"></i></a>
+              <a href="#"><i class="pi pi-github"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+ </div>
+
+  

@@ -32,11 +32,12 @@ import {BlocksComponent} from './blocks/blocks/blocks.component';
 import { GenerateKeysPaireComponent } from './demo/view/generate-keys-paire/generate-keys-paire.component';
 import { StoreDocumentComponent } from './demo/view/store-document/store-document.component';
 import { RetrieveDocumentComponent } from './demo/view/retrieve-document/retrieve-document.component';
+import { FrontPublicComponent } from './demo/view/front-public/front-public.component';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
-            {path: '', component: AppMainComponent, children: [
+            {path: 'admin', component: AppMainComponent, children: [
                 {path: '', component: DashboardDemoComponent},
                 {path: 'uikit/formlayout', component: FormLayoutDemoComponent},
                 {path: 'uikit/input', component: InputDemoComponent},
@@ -67,6 +68,7 @@ import { RetrieveDocumentComponent } from './demo/view/retrieve-document/retriev
                 {path: 'utilities/icons', component: IconsComponent},
                 {path: 'documentation', component: DocumentationComponent},
             ]},
+            {path: '', component: FrontPublicComponent},
             {path: 'error', component: AppErrorComponent},
             {path: 'accessdenied', component: AppAccessdeniedComponent},
             {path: '404', component: AppNotfoundComponent},

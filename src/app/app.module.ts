@@ -136,6 +136,7 @@ import {IconService} from './demo/service/iconservice';
 import { StoreDocumentComponent } from './demo/view/store-document/store-document.component';
 import { RetrieveDocumentComponent } from './demo/view/retrieve-document/retrieve-document.component';
 import { GenerateKeysPaireComponent } from './demo/view/generate-keys-paire/generate-keys-paire.component';
+import { FrontPublicComponent } from './demo/view/front-public/front-public.component';
 
 @NgModule({
     imports: [
@@ -266,7 +267,8 @@ import { GenerateKeysPaireComponent } from './demo/view/generate-keys-paire/gene
         BlockViewer,
         GenerateKeysPaireComponent,
         StoreDocumentComponent,
-        RetrieveDocumentComponent
+        RetrieveDocumentComponent,
+        FrontPublicComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
