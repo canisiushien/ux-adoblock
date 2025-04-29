@@ -16,66 +16,17 @@
               <li><a href="#multimedia">MULTIMEDIA</a></li>
             </ul>
           </div>
-          <div class="landing-header-content">
-            <h1>PrimeNG Presents Olympia</h1>
-            <p>Modern and elegant responsive application template with a premium look for PrimeNG components.</p>
-            <button pButton type="button" label="Go to Dashboard"></button>
-          </div>
+         
         </div>
       
         <div id="features" class="landing-features">
-          <div class="grid">
-            <ng-container *ngFor="let feature of features">
-              <div class="col-12 lg:col-6">
-                <div class="feature-box">
-                  <img [src]="feature.img" [alt]="feature.title" />
-                  <div>
-                    <h5>{{ feature.title }}</h5>
-                    <p>{{ feature.description }}</p>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </div>
+       
+            <router-outlet></router-outlet>
+            
         </div>
       
-        <div id="news" class="landing-news">
-          <h5>PrimeNG Premium Template</h5>
-          <p>Take advantage of media's most prominent business trend, and empower your internal advertising teams.</p>
-          <button pButton type="button" label="Learn More"></button>
-        </div>
-      
-        <div id="pricing" class="landing-pricing">
-          <div class="grid">
-            <ng-container *ngFor="let plan of pricingPlans">
-              <div class="col-12 lg:col-4">
-                <div class="pricing-box">
-                  <div class="pricing-box-header">
-                    <h5>{{ plan.name }}</h5>
-                    <span>{{ plan.price }}</span>
-                  </div>
-                  <div class="pricing-box-content">
-                    <ul>
-                      <li *ngFor="let feature of plan.features">
-                        <i class="pi pi-check"></i> {{ feature }}
-                      </li>
-                    </ul>
-                    <button pButton type="button" label="Buy Now"></button>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-      
-        <div id="multimedia" class="landing-multimedia">
-          <h5>MULTIMEDIA</h5>
-          <p>Duis nec lobortis massa, sed facilisis lorem. In hac habitasse platea dictumst.</p>
-          <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/OgwFrGMb8Y8" frameborder="0" allowfullscreen></iframe>
-          </div>
-        </div>
-      
+        
+
         <div class="landing-footer">
           <div class="grid">
             <div class="col-12 lg:col-3">

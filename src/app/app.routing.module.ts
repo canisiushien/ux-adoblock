@@ -68,7 +68,10 @@ import { FrontPublicComponent } from './demo/view/front-public/front-public.comp
                 {path: 'utilities/icons', component: IconsComponent},
                 {path: 'documentation', component: DocumentationComponent},
             ]},
-            {path: '', component: FrontPublicComponent},
+            {path: '', component: FrontPublicComponent, children: [
+                {path: '', component: RetrieveDocumentComponent},
+            ]},
+           
             {path: 'error', component: AppErrorComponent},
             {path: 'accessdenied', component: AppAccessdeniedComponent},
             {path: '404', component: AppNotfoundComponent},
