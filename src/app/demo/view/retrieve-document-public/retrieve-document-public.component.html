@@ -4,16 +4,15 @@
         <form (ngSubmit)="retrieveDocument()" #dtf="ngForm">
             <div class="card p-fluid">
                 <!-- titre panneau -->
-                <h5>Authentification de document administratif</h5>
+                <h3 class="font-bold md:text-center"> <span class="pi pi-fw pi-check-square"></span> Authentification de documents administratifs à l'aide d'Ethereum 2.0</h3>
 				<!-- fichier pdf ou word -->
 				<div class="field">
-					<label htmlFor="docNum">Document numérique (PDF ou Word)<span class="p-error">*</span></label>
                     <p-fileUpload [auto]="true" (onSelect)="onFileSelect($event)" fileLimit="1" 
-					multiple=false accept=".pdf, .doc, .docx" invalidFileTypeMessageSummary="Type de fichier non autorisé" maxFileSize="1000000" invalidFileSizeMessageSummary="Votre fichier est trop volumineux" chooseLabel="Chargez le document administratif (PDF/Word)">
-					</p-fileUpload>
+                    multiple=false accept=".pdf, .doc, .docx" invalidFileTypeMessageSummary="Type de fichier non autorisé" maxFileSize="1000000" invalidFileSizeMessageSummary="Votre fichier est trop volumineux" chooseLabel="Chargez le document administratif (PDF/Word)">
+                    </p-fileUpload>
 				</div>
                 <div class="field grid col-12">
-                    <button pButton pRipple type="submit" icon="pi pi-check-square" [disabled]="!dtf.form.valid" label="Vérifier l'authenticité du document" class="p-button-success font-boldr-2 mb-2"></button>
+                    <button pButton pRipple type="submit" icon="pi pi-check-square" [disabled]="!dtf.form.valid" label="Vérifier l'authenticité du document" class="p-button-success font-boldr-2 mb-2 lg:text-center"></button>
                 </div>
             </div>
         </form>

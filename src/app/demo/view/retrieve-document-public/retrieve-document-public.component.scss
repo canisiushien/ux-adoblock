@@ -1,0 +1,10 @@
+//pour clignoter
+.blink {
+    animation: blinker 30s linear infinite;
+}
+  
+@keyframes blinker {
+    90% {
+        opacity: 0;
+    }
+}
