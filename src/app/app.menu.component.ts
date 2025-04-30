@@ -13,7 +13,7 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         this.model = [
-            { label: 'Accueil', icon: 'pi  pi-fw pi-home', routerLink: ['/']},
+            { label: 'Accueil', icon: 'pi  pi-fw pi-home', routerLink: ['/admin']},
             {
                 label: 'Obtenir clés privée/publique', icon: 'pi pi-fw pi-key', routerLink: ['/admin/generate-keys']
             },
@@ -23,7 +23,17 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Authentifier document', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/retrieve-doc']
             },
-            { label: 'Landing', icon: 'pi pi-fw pi-globe', url: 'assets/pages/landing.html', target: '_blank' },
+            {
+                label: 'Guide utilisation', icon: 'pi pi-fw pi-file', routerLink: ['/admin/documentation']
+            },
+            {
+                label: 'Utilisateur', icon: 'pi pi-fw pi-user', routerLink: ['/utilities'],
+                items: [
+                    {label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['utilities/icons']},
+                    {label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank'},
+                ]
+            }
+           
             // {//a supprimer
             //     label: 'UI Kit', icon: 'pi pi-fw pi-star-fill', routerLink: ['/uikit'],
             //     items: [
@@ -65,16 +75,6 @@ export class AppMenuComponent implements OnInit {
             //         { label: 'Access Denied', icon: 'pi pi-fw pi-ban', routerLink: ['/accessdenied'], target: '_blank' },
             //         { label: 'Empty', icon: 'pi pi-fw pi-clone', routerLink: ['/pages/empty'] }
             //     ]
-            // },
-            {
-                label: 'Utilisateur', icon: 'pi pi-fw pi-user', routerLink: ['/utilities'],
-                items: [
-                    {label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['utilities/icons']},
-                    {label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank'},
-                ]
-            },
-            // {
-            //     label: 'Guide utilisation', icon: 'pi pi-fw pi-file', routerLink: ['/documentation']
             // }
         ];
     }

@@ -134,6 +134,7 @@ import {PhotoService} from './demo/service/photoservice';
 import {ProductService} from './demo/service/productservice';
 import {IconService} from './demo/service/iconservice';
 import { StoreDocumentComponent } from './demo/view/store-document/store-document.component';
+import { RetrieveDocumentPublicComponent } from './demo/view/retrieve-document-public/retrieve-document-public.component';
 import { RetrieveDocumentComponent } from './demo/view/retrieve-document/retrieve-document.component';
 import { GenerateKeysPaireComponent } from './demo/view/generate-keys-paire/generate-keys-paire.component';
 import { FrontPublicComponent } from './demo/view/front-public/front-public.component';
@@ -261,13 +262,14 @@ import { FrontPublicComponent } from './demo/view/front-public/front-public.comp
         ChartsDemoComponent,
         EmptyDemoComponent,
         FileDemoComponent,
-        DocumentationComponent,
         IconsComponent,
         BlocksComponent,
         BlockViewer,
         GenerateKeysPaireComponent,
         StoreDocumentComponent,
         RetrieveDocumentComponent,
+        RetrieveDocumentPublicComponent,
+        DocumentationComponent,
         FrontPublicComponent
     ],
     providers: [

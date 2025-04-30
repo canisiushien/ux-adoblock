@@ -22,9 +22,9 @@ export class FrontPublicComponent {
   ];
 
   footerLinks = [
-    { title: 'OVERVIEW', links: ['Why Olympia', 'Get Started', 'Testimonials', 'License'] },
-    { title: 'DEMOS', links: ['PrimeNG', 'PrimeNG', 'PrimeReact', 'PrimeElements'] },
-    { title: 'SUPPORT', links: ['Support Options', 'Pro', 'Elite', 'Forum'] }
+    { title: 'UTILES', links: ['UJKZ', 'License']},
+    { title: 'FAQ', links: ['Why Ethereum', 'Why Offizielle Mitteilung'] },
+    { title: 'SUPPORT', links: ['A propos', 'Guide utilisation'] }
   ];
 
 }

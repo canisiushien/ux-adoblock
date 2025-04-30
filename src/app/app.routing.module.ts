@@ -33,6 +33,7 @@ import { GenerateKeysPaireComponent } from './demo/view/generate-keys-paire/gene
 import { StoreDocumentComponent } from './demo/view/store-document/store-document.component';
 import { RetrieveDocumentComponent } from './demo/view/retrieve-document/retrieve-document.component';
 import { FrontPublicComponent } from './demo/view/front-public/front-public.component';
+import { RetrieveDocumentPublicComponent } from './demo/view/retrieve-document-public/retrieve-document-public.component';
 
 @NgModule({
     imports: [
@@ -62,14 +63,14 @@ import { FrontPublicComponent } from './demo/view/front-public/front-public.comp
                 {path: 'blocks', component: BlocksComponent},
 
 
-                {path: 'admin/generate-keys', component: GenerateKeysPaireComponent},
-                {path: 'admin/store-doc', component: StoreDocumentComponent},
-                {path: 'admin/retrieve-doc', component: RetrieveDocumentComponent},
+                {path: 'generate-keys', component: GenerateKeysPaireComponent},
+                {path: 'store-doc', component: StoreDocumentComponent},
+                {path: 'retrieve-doc', component: RetrieveDocumentComponent},
                 {path: 'utilities/icons', component: IconsComponent},
                 {path: 'documentation', component: DocumentationComponent},
             ]},
             {path: '', component: FrontPublicComponent, children: [
-                {path: '', component: RetrieveDocumentComponent},
+                {path: '', component: RetrieveDocumentPublicComponent}
             ]},
            
             {path: 'error', component: AppErrorComponent},
