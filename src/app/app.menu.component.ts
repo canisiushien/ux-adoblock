@@ -15,7 +15,7 @@ export class AppMenuComponent implements OnInit {
         this.model = [
             { label: 'Accueil', icon: 'pi  pi-fw pi-home', routerLink: ['/']},
             {
-                label: 'Obtenir clés privé/publique', icon: 'pi pi-fw pi-key', routerLink: ['/admin/generate-keys']
+                label: 'Obtenir clés privée/publique', icon: 'pi pi-fw pi-key', routerLink: ['/admin/generate-keys']
             },
             {
                 label: 'Enregistrer document', icon: 'pi pi-fw pi-pencil', routerLink: ['/admin/store-doc']
