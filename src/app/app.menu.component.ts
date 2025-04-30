@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Authentifier document', icon: 'pi pi-fw pi-check-square', routerLink: ['/admin/retrieve-doc']
             },
-            { label: 'Landing', icon: 'pi pi-fw pi-globe', url: 'assets/pages/landing.html', target: '_blank' },
+           
             // {//a supprimer
             //     label: 'UI Kit', icon: 'pi pi-fw pi-star-fill', routerLink: ['/uikit'],
             //     items: [

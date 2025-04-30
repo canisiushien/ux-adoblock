@@ -62,9 +62,9 @@ import { FrontPublicComponent } from './demo/view/front-public/front-public.comp
                 {path: 'blocks', component: BlocksComponent},
 
 
-                {path: 'admin/generate-keys', component: GenerateKeysPaireComponent},
-                {path: 'admin/store-doc', component: StoreDocumentComponent},
-                {path: 'admin/retrieve-doc', component: RetrieveDocumentComponent},
+                {path: 'generate-keys', component: GenerateKeysPaireComponent},
+                {path: 'store-doc', component: StoreDocumentComponent},
+                {path: 'retrieve-doc', component: RetrieveDocumentComponent},
                 {path: 'utilities/icons', component: IconsComponent},
                 {path: 'documentation', component: DocumentationComponent},
             ]},
