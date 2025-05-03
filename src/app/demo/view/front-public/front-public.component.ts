@@ -23,7 +23,7 @@ export class FrontPublicComponent {
 
   footerLinks = [
     { title: 'UTILES', links: ['UJKZ', 'License']},
-    { title: 'FAQ', links: ['Why Ethereum', 'Why Offizielle Mitteilung'] },
+    { title: 'FAQ', links: ['Pourquoi Ethereum ?', 'Pourquoi Communiqué Off. ?'] },
     { title: 'SUPPORT', links: ['A propos', 'Guide utilisation'] }
   ];
 
