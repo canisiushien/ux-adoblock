@@ -14,7 +14,7 @@ export const environment = {
   //enregistre un document administratif sur la blockchain
   storeDocToBlockchain: BASE_API + '/add-to-blockchain',
 
-  //vérifie l'authenticité d'un document administratif depuis la blockchain
+  //vérifie l'authenticité d'un document administratif depuis la blockchain 
   retrieveDocFromBlockchain: BASE_API + '/verify-from-blockchain'
 };
 
