@@ -3,7 +3,9 @@ import {Message, MessageService} from 'primeng/api';
 import { AddResponse, IAddResponse } from '../../domain/add-response';
 import { NgForm } from '@angular/forms';
 import { DocumentService } from '../../service/document-service';
+import { EthereumService } from '../../service/ethereum.service';
 import { DataDocument, IDataDocument } from '../../domain/data-document';
+import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
 
 @Component({
   selector: 'app-store-document',
@@ -14,6 +16,7 @@ import { DataDocument, IDataDocument } from '../../domain/data-document';
 export class StoreDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
+  documentEth: IDocumentETH = new DocumentETH();
   addResponse: IAddResponse = new AddResponse();
   dataDocument: IDataDocument = new DataDocument();
   message: any;
@@ -23,11 +26,18 @@ export class StoreDocumentComponent {
   crtSelectedFile: File | null = null;
   fichierCrtCharge: boolean = false;
   fichierDocCharge: boolean = false;
+  fourtout: any;
 
   //constructeur pour injection des services necessaires
-  constructor(private readonly messageService: MessageService, private readonly documentService: DocumentService) {}
+  constructor(private readonly messageService: MessageService, 
+    private readonly documentService: DocumentService,
+    private readonly ethereumService: EthereumService) {}
 
-    // Vérifie si le formulaire est valide
+    ngOnInit(): void {
+      this.ethereumService.initContract(); // Initialise provider, contrat, écouteurs
+    }
+
+  // Vérifie si le formulaire est valide
   formValide(): boolean {
     if (this.fichierCrtCharge) {
         return this.fichierDocCharge; // Si .crt chargé, seul doc est requis
@@ -82,13 +92,26 @@ export class StoreDocumentComponent {
       formData.append("publicKey", this.dataDocument.clePublic);
       formData.append("file", this.dataDocument.docAdminFile);
       formData.append("fileKey", this.dataDocument.keysFile);
-      //appel de l'api
-      this.documentService.saveDocumentToEthereum(formData).subscribe(response =>
+      //appel de l'api de preparation du fichier (extraction et calcul des données)
+      this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response =>
         {
           //recuperation de l'objet reponse de l'api
-          this.addResponse = response.body;
+          this.documentEth = response.body;
         }
-      )
+      );
+
+      //============ini param a remplacer par documentEth
+      let hash = 'tJtydIPM3SjcrFHwvUyQinS+Lvpq5xZ3jgZoDbj5nXU=';
+      let signedHash = 'MEYCIQD9C64ImYBPokrfOdYcAVORyJpIe/JMdQv0pc1JN/6DRQIhAKxfCbLP9wuk7Q6XQ3l38HOhidozVlByR9qsxjdEwZ3y';
+      let pubKey = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEjq4FI00qwKW5KYMWSTTAmjmButDwep+8wAM7B1Z+LJPJdx6DUH7I2a00RcAPm//89PuQFcihf8/NrB2+bVt26Q==';
+      let privKey = 'MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBerdkzlI2nV6qVotkiNNS2YHd7H1LYP1PZP2c4Y5HPFA==';
+      //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
+      this.ethereumService.storeDocument(hash, signedHash, pubKey).then(tx => {
+        console.log('Transaction envoyée :', tx);
+        this.fourtout = tx;
+      }).catch(err => {
+        console.error('Erreur :', err);
+      });
     }
   }
 

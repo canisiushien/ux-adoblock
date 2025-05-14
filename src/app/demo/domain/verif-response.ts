@@ -13,19 +13,19 @@ export interface IVerifResponse {
 
     fileName?: string;  /** nom du fichier soumis a authentification (Document numetique) */
 
-    /**
-     * l'empreinte numerique du doc. Ce hash est encode en base64 (Empreinte
-     * numerique du document)
-     */
-    docHashed?: string;
-
     requestDate?: Date; /** date (Instant) de demande d'authentification (Date de demande) */
 
     typeKey?: string;  /** type d'algo cryptographique */
 
     ellipticCurve?: string;  /** courbe elliptique */
 
-    publicKey?: string;  /** cle publique associee */
+    publicKeyStored?: string;  /** cle publique associee */
+
+    newHashEncoded?: string; /** hash calculé et soumis à eth pour la recherche dans eth */
+
+    hashEncodedStored?: string; /** hash encodé en base64 et stocké sur eth auparavant */
+
+    signedHashEncodedStored?: string; /** hash signé encodé en base64 et stocké sur eth auparavant */
 }
 
 export class VerifResponse implements IVerifResponse {
@@ -38,15 +38,19 @@ export class VerifResponse implements IVerifResponse {
 
         public fileName?: string,
 
-        public docHashed?: string,
-
         public requestDate?: Date,
 
         public typeKey?: string,
 
         public ellipticCurve?: string,
 
-        public publicKey?: string
+        public publicKeyStored?: string,
+
+        public newHashEncoded?: string,
+
+        public hashEncodedStored?: string,
+
+        public signedHashEncodedStored?: string
     ){}
     
 }

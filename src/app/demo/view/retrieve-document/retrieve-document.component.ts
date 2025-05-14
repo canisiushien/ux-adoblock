@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { Message, MessageService } from 'primeng/api';
 import { DocumentService } from '../../service/document-service';
 import { IVerifResponse, VerifResponse } from '../../domain/verif-response';
+import { EthereumService } from '../../service/ethereum.service';
+import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
 
 @Component({
   selector: 'app-retrieve-document',
@@ -13,15 +15,20 @@ import { IVerifResponse, VerifResponse } from '../../domain/verif-response';
 export class RetrieveDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
+  documentEth: IDocumentETH = new DocumentETH();
   verifResponse: IVerifResponse = new VerifResponse();
+  finalResponse: IVerifResponse = new VerifResponse();
   message: any;
   timeoutHandle: any;
   uploadedFiles: any[] = [];
   selectedFile: File | null = null;
   fichierDocCharge: boolean = false;
   demandeTransaction: boolean = false;
+  fourtout: any;
 
-  constructor(private readonly messageService: MessageService, private readonly documentService: DocumentService) {}
+  constructor(private readonly messageService: MessageService, 
+    private readonly documentService: DocumentService,
+    private readonly ethereumService: EthereumService) {}
 
  // Gestion de la sélection du fichier de document administratif
  onFileSelect(event: any): void {
@@ -45,14 +52,44 @@ export class RetrieveDocumentComponent {
       //initialisation du formData
       const formData: FormData = new FormData();
       formData.append("file", this.selectedFile);
-      //appel de l'api
-      this.documentService.authenticateDocumentFromEthereum(formData).subscribe(response =>
+
+      //appel de l'api de preparation du fichier (extraction et calcul des données)
+      this.documentService.prepareGetDocumentFromEthereum(formData).subscribe(response =>
         {
           //recuperation de l'objet reponse de l'api
-          this.verifResponse = response.body;
+          this.documentEth = response.body;
           this.demandeTransaction = true;
         }
-      )
+      );
+
+      //============ini param a remplacer par documentEth
+      let hash = 'tJtydIPM3SjcrFHwvUyQinS+Lvpq5xZ3jgZoDbj5nXU=';
+      //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
+      //this.ethereumService.getDocument(this.documentEth.hashEncoded).then(data => {
+      this.ethereumService.getDocument(hash).then(data => {
+        this.fourtout = data;
+        console.log('Document trouvé :', data);
+      })
+      .catch(error => {
+        console.error('Erreur ou document non trouvé :', error);
+      });
+
+      //on construit la reponse
+      this.verifResponse.fileName = this.documentEth.fileName;
+      this.verifResponse.newHashEncoded = this.documentEth.hashEncoded;
+      this.verifResponse.hashEncodedStored = this.fourtout.hashEncoded;
+      this.verifResponse.signedHashEncodedStored = this.fourtout.signedHashEncoded;
+      this.verifResponse.publicKeyStored = this.fourtout.publicKeyEncoded;
+      this.verifResponse.horodatage = this.fourtout.timestamp;
+
+      //on appelle l'api de verification
+      this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(response =>
+        {
+          //recuperation de l'objet reponse final de l'api
+          this.finalResponse = response.body;
+        }
+      );
+
     }
   }
 

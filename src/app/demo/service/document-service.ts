@@ -5,10 +5,12 @@ import { environment } from 'src/environments/environment';
 import { IKeysPair } from '../domain/keys-pair';
 import { IAddResponse } from '../domain/add-response';
 import { IVerifResponse } from '../domain/verif-response';
+import { IDocumentETH } from '../domain/document-eth';
 
 type EntityResponseType = HttpResponse<IKeysPair>;
 type EntityArrayResponseType = HttpResponse<IKeysPair[]>;
 type EntityAddDocResponseType = HttpResponse<IAddResponse>;
+type EntityDocumentETHType = HttpResponse<IDocumentETH>;
 type EntityVerifDocResponseType = HttpResponse<IVerifResponse>;
 
 @Injectable({
@@ -26,22 +28,36 @@ export class DocumentService {
     generateKeysPair(): Observable<EntityResponseType> {
         return this.http.get<IKeysPair>(`${environment.generateKeysPair}`, { observe: 'response' });
     }
+    
 
     /**
-     * enregistre un document administratif sur la blockchain
+     * extrait et calcul le necessaire pour l'enregistrement d'un document
+     * administratif sur la blockchain
+     *
      * @param document 
      * @returns 
      */
-    saveDocumentToEthereum(document: any): Observable<EntityAddDocResponseType> {
-        return this.http.post<IAddResponse>(environment.storeDocToBlockchain, document, { observe: 'response' });
+    prepareStoreDocumentToEthereum(document: any): Observable<EntityDocumentETHType> {
+        return this.http.post<IDocumentETH>(environment.prepareStoreToBlockchain, document, { observe: 'response' });
     }
-  
+
     /**
-     * vérifie l'authenticité d'un document administratif depuis la blockchain
+     * extrait et calcul le necessaire pour la recherche d'un document administratif
+     * depuis la blockchain
+     *
      * @param document 
      * @returns 
      */
-    authenticateDocumentFromEthereum(document: any): Observable<EntityVerifDocResponseType> {
-        return this.http.post<IVerifResponse>(environment.retrieveDocFromBlockchain, document, { observe: 'response' });
+    prepareGetDocumentFromEthereum(document: any): Observable<EntityDocumentETHType> {
+        return this.http.post<IDocumentETH>(environment.prepareStoreToBlockchain, document, { observe: 'response' });
+    }
+
+    /**
+     * vérifie l'authenticité d'un document administratif digital venant de la blockchain
+     * @param document 
+     * @returns 
+     */
+    verifyDocumentFromEthereum(document: any): Observable<EntityVerifDocResponseType> {
+        return this.http.post<IVerifResponse>(environment.verifyDocFromBlockchain, document, { observe: 'response' });
     }
   }

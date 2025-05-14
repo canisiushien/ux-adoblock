@@ -11,11 +11,15 @@ export const environment = {
   //génère une paire de clés cryptographiques
   generateKeysPair: BASE_API + '/generate-keys',
 
-  //enregistre un document administratif sur la blockchain
-  storeDocToBlockchain: BASE_API + '/add-to-blockchain',
+  //calcule les données necessaires du fichier qui doivent être stokées sur Eth
+  prepareStoreToBlockchain: BASE_API + '/prepare-store-to-blockchain',
 
-  //vérifie l'authenticité d'un document administratif depuis la blockchain 
-  retrieveDocFromBlockchain: BASE_API + '/verify-from-blockchain'
+  //calcule les données necessaires du fichier qui doivent servir à la rechercher sur Eth
+  prepareGetFromBlockchain: BASE_API + '/prepare-get-from-blockchain',
+
+
+  //vérifie l'authenticité d'un document administratif depuis la blockchain
+  verifyDocFromBlockchain: BASE_API + '/verify-from-blockchain'
 };
 
 /*

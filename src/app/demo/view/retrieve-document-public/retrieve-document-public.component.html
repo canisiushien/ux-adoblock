@@ -59,14 +59,14 @@
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="empreinteNum" class="col-12 mb-2 md:col-3 md:mb-0 font-bold" pTooltip="l'empreinte numerique (hash) du document administratif vérifié">Empreinte numérique du document : </label>
                     <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="empreinteNum" name="docHashed" [(ngModel)]="verifResponse.docHashed" readonly="true"/>
+                        <input pInputText type="text" id="empreinteNum" name="hashEncodedStored" [(ngModel)]="verifResponse.hashEncodedStored" readonly="true"/>
                     </div>
                 </div>
                 <!-- clé publique associée -->
                 <div class="field grid col-12 md:col-12">
                     <label htmlFor="clePublique" class="col-12 mb-2 md:col-3 md:mb-0 font-bold" pTooltip="la clé publique cryptographique associée">Clé publique associée : </label>
                     <div class="col-12 md:col-9">
-                        <textarea rows="2" cols="60" pInputTextarea id="clePublic" name="publicKey" [(ngModel)]="verifResponse.publicKey" readonly></textarea>
+                        <textarea rows="2" cols="60" pInputTextarea id="clePublic" name="publicKey" [(ngModel)]="verifResponse.publicKeyStored" readonly></textarea>
                     </div>
                 </div>
                 <!-- type de cle -->
