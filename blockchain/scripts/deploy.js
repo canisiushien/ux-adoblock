@@ -11,8 +11,9 @@ async function main() {
   const Contract = await hre.ethers.getContractFactory("DocumentAdministratif");
   //on deploie le contrat
   const contract = await Contract.deploy();
+  console.log("Déploiement en cours...", Contract);
   //on s'assure que le contrat est deployé car le deploiement peut prendre quelques instants de retard
-  await contract.deployed();
+  //await contract.deployed();
   console.log("Contrat déployé à l'adresse :", contract.address);
 }
 

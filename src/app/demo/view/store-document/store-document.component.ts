@@ -96,22 +96,30 @@ export class StoreDocumentComponent {
       this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response =>
         {
           //recuperation de l'objet reponse de l'api
-          this.documentEth = response.body;
+          this.documentEth.fileName = response.body.fileName;
+          this.documentEth.hashEncoded = response.body.hashEncoded;
+          this.documentEth.signedHashEncoded = response.body.signedHashEncoded;
+          this.documentEth.publicKeyEncoded = response.body.publicKeyEncoded;
+          this.documentEth.timestamp = response.body.timestamp;
         }
       );
-
+      console.log("======called prepareStoreDocumentToEthereum() : {}",this.documentEth);
+      //==============construction de la reponse finale
+      this.addResponse.documentName = this.documentEth.fileName;
+      console.log("======this.addResponse : {}",this.addResponse);
+      
       //============ini param a remplacer par documentEth
       let hash = 'tJtydIPM3SjcrFHwvUyQinS+Lvpq5xZ3jgZoDbj5nXU=';
       let signedHash = 'MEYCIQD9C64ImYBPokrfOdYcAVORyJpIe/JMdQv0pc1JN/6DRQIhAKxfCbLP9wuk7Q6XQ3l38HOhidozVlByR9qsxjdEwZ3y';
       let pubKey = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEjq4FI00qwKW5KYMWSTTAmjmButDwep+8wAM7B1Z+LJPJdx6DUH7I2a00RcAPm//89PuQFcihf8/NrB2+bVt26Q==';
       let privKey = 'MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBerdkzlI2nV6qVotkiNNS2YHd7H1LYP1PZP2c4Y5HPFA==';
       //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
-      this.ethereumService.storeDocument(hash, signedHash, pubKey).then(tx => {
+     /* this.ethereumService.storeDocument(hash, signedHash, pubKey).then(tx => {
         console.log('Transaction envoyée :', tx);
         this.fourtout = tx;
       }).catch(err => {
         console.error('Erreur :', err);
-      });
+      });*/
     }
   }
 

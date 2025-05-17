@@ -9,14 +9,15 @@ export class EthereumService {
     private provider!: ethers.BrowserProvider;
     private signer!: ethers.Signer;
     private contract!: ethers.Contract;
-    private contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'; //Adresse du contrat déployé
+    private readonly contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'; //Adresse du contrat déployé
+    private readonly gasEstimated = 500000;
 
     async initContract() {
         if ((window as any).ethereum) {
           this.provider = new ethers.BrowserProvider((window as any).ethereum);
           await this.provider.send("eth_requestAccounts", []);
           this.signer = await this.provider.getSigner();
-          console.log('====signer : ', this.signer);
+          console.log('=====call initContract(). signer = ', this.signer);
     
           this.contract = new ethers.Contract(
             this.contractAddress,
@@ -40,9 +41,9 @@ export class EthereumService {
         console.log('APPEL DE ethereum.service.storeDocument()');
         await this.initContract();
         const tx = await this.contract.storeAdministrativeDocument(_hashEncoded, _signedHashEncoded, _publicKeyEncoded
-          //,{
-            //gasLimit: 500000  // valeur standard, ajuste si besoin
-          //}
+          ,{
+            gasLimit: this.gasEstimated  // valeur standard, ajuste si besoin
+          }
         );
         console.log('========tx = ', tx);
         const receipt = await tx.wait();

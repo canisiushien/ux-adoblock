@@ -9,7 +9,8 @@ module.exports = {
   },
   networks: {
     localhost: {
-      url: "http://127.0.0.1:8545" // réseau local Hardhat
+      url: "http://127.0.0.1:8545", // réseau local Hardhat
+      chainId: 31337 //Ce id doit correspondre à celui configuré dans le reseau sur MetaMask
     }
   }
 };
