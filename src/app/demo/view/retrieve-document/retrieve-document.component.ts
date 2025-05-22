@@ -15,25 +15,23 @@ import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
 export class RetrieveDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
-  documentEth: IDocumentETH = new DocumentETH();
-  verifResponse: IVerifResponse = new VerifResponse();
-  finalResponse: IVerifResponse = new VerifResponse();
+  documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de la recherche
+  verifResponse: IVerifResponse = new VerifResponse();//pour contenir les données reponse de l'operation de recherche
   message: any;
   timeoutHandle: any;
   uploadedFiles: any[] = [];
   selectedFile: File | null = null;
   fichierDocCharge: boolean = false;
   demandeTransaction: boolean = false;
-  fourtout: any;
 
-  constructor(private readonly messageService: MessageService, 
+  constructor(private readonly messageService: MessageService,
     private readonly documentService: DocumentService,
-    private readonly ethereumService: EthereumService) {}
+    private readonly ethereumService: EthereumService) { }
 
- // Gestion de la sélection du fichier de document administratif
- onFileSelect(event: any): void {
-  this.fichierDocCharge = event.files.length > 0;  // Vérifie si le fichier PDF/Word est chargé
-  const file: File = event.files[0];
+  // Gestion de la sélection du fichier de document administratif
+  onFileSelect(event: any): void {
+    this.fichierDocCharge = event.files.length > 0;  // Vérifie si le fichier PDF/Word est chargé
+    const file: File = event.files[0];
 
     if (file) {
       // Vérification du type de fichier
@@ -46,52 +44,63 @@ export class RetrieveDocumentComponent {
     }
   }
 
-  //authentifier le document sur la blockchain
+
+  /**
+   * Authentification de document digital dans Ethereum.
+   * 
+   * 1.collecte les données du formulaire
+   * 2.appel Observable de l'api-rest spring boot pour extraire et calculer l'infos à rechercher sur Ethereum
+   * 3.appel (dans 2) Promise de la fonction getAdministrativeDocument du contrat afin de retrouver les resultats de 2. sur Ethereum
+   * 4.appel (dans 3) Observable de l'api-rest spring boot pour comparer/verifier les hash et clés associées
+   * 5.notifier UI du resultat final de vérifications/authentification
+   */
   retrieveDocument() {
-    if(this.selectedFile) {
+    const toDay = new Date();
+    if (this.selectedFile) {
       //initialisation du formData
       const formData: FormData = new FormData();
       formData.append("file", this.selectedFile);
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
-      this.documentService.prepareGetDocumentFromEthereum(formData).subscribe(response =>
-        {
-          //recuperation de l'objet reponse de l'api
-          this.documentEth = response.body;
-          this.demandeTransaction = true;
-        }
-      );
+      this.documentService.prepareGetDocumentFromEthereum(formData).subscribe(response => {
+        //recuperation des données de reponse de l'api de preparation de recherche
+        this.documentEth = response.body;
+        this.demandeTransaction = true;
+        console.log("======this.documentEth : {}", this.documentEth);
 
-      //============ini param a remplacer par documentEth
-      let hash = 'tJtydIPM3SjcrFHwvUyQinS+Lvpq5xZ3jgZoDbj5nXU=';
-      //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
-      //this.ethereumService.getDocument(this.documentEth.hashEncoded).then(data => {
-      this.ethereumService.getDocument(hash).then(data => {
-        this.fourtout = data;
-        console.log('Document trouvé :', data);
-      })
-      .catch(error => {
-        console.error('Erreur ou document non trouvé :', error);
-      });
+        //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
+        this.ethereumService.getDocument(this.documentEth.hashEncoded)
+          .then(receipt => {
+            console.log('Document trouvé :', receipt);
+            //traitements post-transaction
+            //construction de la reponse finale
+            this.verifResponse.fileName = this.documentEth.fileName;
+            this.verifResponse.newHashEncoded = this.documentEth.hashEncoded;
+            this.verifResponse.hashEncodedStored = receipt.hashEncoded;
+            this.verifResponse.signedHashEncodedStored = receipt.signedHashEncoded;
+            this.verifResponse.publicKeyStored = receipt.publicKeyEncoded;
+            this.verifResponse.horodatage = receipt.timestamp;
+            this.verifResponse.requestDate = toDay?.toLocaleString();
 
-      //on construit la reponse
-      this.verifResponse.fileName = this.documentEth.fileName;
-      this.verifResponse.newHashEncoded = this.documentEth.hashEncoded;
-      this.verifResponse.hashEncodedStored = this.fourtout.hashEncoded;
-      this.verifResponse.signedHashEncodedStored = this.fourtout.signedHashEncoded;
-      this.verifResponse.publicKeyStored = this.fourtout.publicKeyEncoded;
-      this.verifResponse.horodatage = this.fourtout.timestamp;
-
-      //on appelle l'api de verification
-      this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(response =>
-        {
-          //recuperation de l'objet reponse final de l'api
-          this.finalResponse = response.body;
-        }
-      );
-
-    }
-  }
+            //on appelle l'api de verifications de l'integrité et de l'authenticité
+            this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(result => {
+              //recuperation des données complementaires de reponse de l'api de verifications
+              this.verifResponse.typeKey = result.body.typeKey;
+              this.verifResponse.ellipticCurve = result.body.ellipticCurve;
+              this.verifResponse.authenticated = result.body.authenticated;
+              this.verifResponse.integrated = result.body.integrated;
+              console.log("======this.verifResponse : {}", this.verifResponse);
+            }, error => {//fin verifyDocumentFromEthereum()
+              console.error("Erreur lors des verifications des hash et clé :", error);
+            });//fin verifyDocumentFromEthereum()
+          }).catch(error => {//fin then()
+            console.error('Erreur ou document non trouvé sur Ethereum :', error);
+          });
+      }, error => {//fin prepareGetDocumentFromEthereum()
+        console.error("Erreur de préparation de verification sur Ethereum :", error);
+      });//fin prepareGetDocumentFromEthereum()
+    }//fin if()
+  }//fin retrieveDocument()
 
   //recuperer api message retour
   showMessage(message: Message) {

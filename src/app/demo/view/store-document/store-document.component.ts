@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import {Message, MessageService} from 'primeng/api';
+import { Message, MessageService } from 'primeng/api';
 import { AddResponse, IAddResponse } from '../../domain/add-response';
 import { NgForm } from '@angular/forms';
 import { DocumentService } from '../../service/document-service';
 import { EthereumService } from '../../service/ethereum.service';
 import { DataDocument, IDataDocument } from '../../domain/data-document';
 import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
+import { formatEther } from "ethers";
 
 @Component({
   selector: 'app-store-document',
@@ -16,9 +17,9 @@ import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
 export class StoreDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
-  documentEth: IDocumentETH = new DocumentETH();
-  addResponse: IAddResponse = new AddResponse();
-  dataDocument: IDataDocument = new DataDocument();
+  documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de l'ajout
+  addResponse: IAddResponse = new AddResponse();//pour contenir les données reponse de l'operation d'ajout 
+  dataDocument: IDataDocument = new DataDocument();//pour contenir les données du formulaire d'ajout de doc admin
   message: any;
   timeoutHandle: any;
   uploadedFiles: any[] = [];
@@ -26,21 +27,20 @@ export class StoreDocumentComponent {
   crtSelectedFile: File | null = null;
   fichierCrtCharge: boolean = false;
   fichierDocCharge: boolean = false;
-  fourtout: any;
 
   //constructeur pour injection des services necessaires
-  constructor(private readonly messageService: MessageService, 
+  constructor(private readonly messageService: MessageService,
     private readonly documentService: DocumentService,
-    private readonly ethereumService: EthereumService) {}
+    private readonly ethereumService: EthereumService) { }
 
-    ngOnInit(): void {
-      this.ethereumService.initContract(); // Initialise provider, contrat, écouteurs
-    }
+  ngOnInit(): void {
+    this.ethereumService.initContract(); // Initialise provider, contrat, écouteurs
+  }
 
   // Vérifie si le formulaire est valide
   formValide(): boolean {
     if (this.fichierCrtCharge) {
-        return this.fichierDocCharge; // Si .crt chargé, seul doc est requis
+      return this.fichierDocCharge; // Si .crt chargé, seul doc est requis
     } else {
       //!!this.dataDocument.clePrivee retourne true si la chaîne n'est pas vide, false sinon.
       //!!this.dataDocument.clePublique fait la même chose.
@@ -48,7 +48,7 @@ export class StoreDocumentComponent {
     }
   }
 
-  
+
   // Vérifie si le fichier .crt de clés est chargé
   onCrtFileSelect(event: any): void {
     this.fichierCrtCharge = event.files.length > 0;
@@ -81,9 +81,16 @@ export class StoreDocumentComponent {
     }
   }
 
-  //ajout de document dans Ethereum via le backend
+  /**
+   * Ajout de document digital dans Ethereum.
+   * 
+   * 1.collecte les données du formulaire
+   * 2.appel Observable de l'api-rest spring boot pour extraire et calculer les infos à stocker sur Ethereum
+   * 3.appel (dans 2) Promise de la fonction storeAdministrativeDocument du contrat afin de stocker les resultats de 2.
+   * 4.notifier UI du resultat final d'ajout
+   */
   addDocument() {
-    if(this.dataDocument) {
+    if (this.dataDocument) {
       //initialisation du formData
       const formData: FormData = new FormData();
       this.dataDocument.docAdminFile = this.selectedFile;
@@ -92,36 +99,56 @@ export class StoreDocumentComponent {
       formData.append("publicKey", this.dataDocument.clePublic);
       formData.append("file", this.dataDocument.docAdminFile);
       formData.append("fileKey", this.dataDocument.keysFile);
+
       //appel de l'api de preparation du fichier (extraction et calcul des données)
-      this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response =>
-        {
-          //recuperation de l'objet reponse de l'api
-          this.documentEth.fileName = response.body.fileName;
-          this.documentEth.hashEncoded = response.body.hashEncoded;
-          this.documentEth.signedHashEncoded = response.body.signedHashEncoded;
-          this.documentEth.publicKeyEncoded = response.body.publicKeyEncoded;
-          this.documentEth.timestamp = response.body.timestamp;
-        }
-      );
-      console.log("======called prepareStoreDocumentToEthereum() : {}",this.documentEth);
-      //==============construction de la reponse finale
-      this.addResponse.documentName = this.documentEth.fileName;
-      console.log("======this.addResponse : {}",this.addResponse);
-      
-      //============ini param a remplacer par documentEth
-      let hash = 'tJtydIPM3SjcrFHwvUyQinS+Lvpq5xZ3jgZoDbj5nXU=';
-      let signedHash = 'MEYCIQD9C64ImYBPokrfOdYcAVORyJpIe/JMdQv0pc1JN/6DRQIhAKxfCbLP9wuk7Q6XQ3l38HOhidozVlByR9qsxjdEwZ3y';
-      let pubKey = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEjq4FI00qwKW5KYMWSTTAmjmButDwep+8wAM7B1Z+LJPJdx6DUH7I2a00RcAPm//89PuQFcihf8/NrB2+bVt26Q==';
-      let privKey = 'MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBerdkzlI2nV6qVotkiNNS2YHd7H1LYP1PZP2c4Y5HPFA==';
-      //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
-     /* this.ethereumService.storeDocument(hash, signedHash, pubKey).then(tx => {
-        console.log('Transaction envoyée :', tx);
-        this.fourtout = tx;
-      }).catch(err => {
-        console.error('Erreur :', err);
-      });*/
-    }
-  }
+      this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response => {
+        //recuperation des données de reponse de l'api de preparation
+        this.documentEth = response.body;
+        console.log("======this.documentEth : {}", this.documentEth);
+
+        //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
+        this.ethereumService.storeDocument(this.documentEth.hashEncoded, this.documentEth.signedHashEncoded, this.documentEth.publicKeyEncoded)
+          .then(result => {
+            console.log("Transaction réussie : ", result);
+            const receipt = result.receipt;
+            const nonce = result.nonce;
+            //traitements post-transaction
+            //construction de la reponse finale
+            this.addResponse.documentName = this.documentEth.fileName;
+            this.addResponse.transactionSignataire = receipt.from;
+            this.addResponse.addressContrat = receipt.to;
+            this.addResponse.numeroBlock = receipt.blockNumber;
+            this.addResponse.nonce = Number(nonce);
+            this.addResponse.statut = receipt.status === 1 ? "Succès (Transaction minée)" : "Échec"; //1 = Succès, 0 = Echec
+            this.addResponse.idTransaction = receipt.hash;
+            this.addResponse.totalBlockGasUtilise = Number(receipt.cumulativeGasUsed);
+            this.addResponse.totalTransactionGasUtilise = Number(receipt.gasUsed);
+            this.addResponse.prixReelTransaction = Number(receipt.gasUsed) * Number(receipt.gasPrice);
+            this.addResponse.prixReelTransactionEther = Number(formatEther(BigInt(receipt.gasUsed) * BigInt(receipt.gasPrice))); //convertir prixReelTransaction de Wei en ETH
+            switch (true) {//valeurs possibles de typeTx
+              case receipt.type === 0:
+                this.addResponse.typeTx = "(0) EIP-1559 : Legacy Transaction";
+                break;
+              case receipt.type === 1:
+                this.addResponse.typeTx = "(1) EIP-2930 : Access List Transaction";
+                break;
+              case receipt.type === 2:
+                this.addResponse.typeTx = "(2) EIP-1559 : transaction (standard recommandé)";
+                break;
+              default:
+                this.addResponse.typeTx = "Inconnu";
+            }
+
+            console.log("======this.addResponse : {}", this.addResponse);
+          }).catch(error => {//fin then()
+            console.error("Erreur lors de l’envoi sur Ethereum :", error);
+          });
+
+      }, error => {//fin prepareStoreDocumentToEthereum()
+        console.error("Erreur de préparation du stockage sur Ethereum :", error);
+      });
+    }//fin if()
+  }//fin addDocument()
 
   //recuperer api message retour
   showMessage(message: Message) {

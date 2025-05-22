@@ -1,12 +1,13 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-const PROTOCOLE : string = 'http'; //http //https
-const IP_DNS: string = 'localhost:8080'; //localhost:8080
+const PROTOCOLE: string = 'http'; //http //https
+const IP_DNS: string = 'localhost:8081'; //localhost:8080
 const BASE_API: string = PROTOCOLE + '://' + IP_DNS + '/api/adoblock';
 
 export const environment = {
   production: false,
+  contractAddress: '0x5fbdb2315678afecb367f032d93f642f64180aa3',
 
   //génère une paire de clés cryptographiques
   generateKeysPair: BASE_API + '/generate-keys',
