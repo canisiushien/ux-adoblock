@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Message, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { AddResponse, IAddResponse } from '../../domain/add-response';
 import { NgForm } from '@angular/forms';
 import { DocumentService } from '../../service/document-service';
@@ -7,6 +7,7 @@ import { EthereumService } from '../../service/ethereum.service';
 import { DataDocument, IDataDocument } from '../../domain/data-document';
 import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
 import { formatEther } from "ethers";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-store-document',
@@ -20,7 +21,6 @@ export class StoreDocumentComponent {
   documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de l'ajout
   addResponse: IAddResponse = new AddResponse();//pour contenir les données reponse de l'operation d'ajout 
   dataDocument: IDataDocument = new DataDocument();//pour contenir les données du formulaire d'ajout de doc admin
-  message: any;
   timeoutHandle: any;
   uploadedFiles: any[] = [];
   selectedFile: File | null = null;
@@ -140,8 +140,25 @@ export class StoreDocumentComponent {
             }
 
             console.log("======this.addResponse : {}", this.addResponse);
+
+            //alerte notification de succès
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Document enregistré',
+              detail: `Transaction réussie (hash: ${this.addResponse.idTransaction})`,
+              life: environment.alerteLife //en ms
+            });
           }).catch(error => {//fin then()
             console.error("Erreur lors de l’envoi sur Ethereum :", error);
+            //alerte notification d'échec
+            const revertMessage = error?.reason ? error?.reason : 'Transaction échouée';
+            //const revertMessage = error?.error?.message || error.message || 'Transaction échouée';
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Échec de la transaction',
+              detail: `Cause : ${revertMessage}`,
+              life: environment.alerteLife //en ms
+            });
           });
 
       }, error => {//fin prepareStoreDocumentToEthereum()
@@ -150,13 +167,6 @@ export class StoreDocumentComponent {
     }//fin if()
   }//fin addDocument()
 
-  //recuperer api message retour
-  showMessage(message: Message) {
-    this.message = message;
-    this.timeoutHandle = setTimeout(() => {
-      this.message = null;
-    }, 5000);
-  }
 
   //vider le formulaire au clic du bouton Effacer
   clear(fichierCrtCharge: any, fichierDocCharge: any): void {

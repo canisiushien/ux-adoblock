@@ -1,52 +1,51 @@
 <!-- landing.component.html -->
- <div class="landing-body">
-    <div class="landing-wrapper">
-        <div id="home" class="landing-header">
-          <div class="landing-topbar">
-            <img src="../layout/images/logo-olympia-white.png" alt="ADOBLOCK"/>
-            <span class="app-title">ADOBLOCK</span>
-            <a href="#" id="landing-menu-button">
-              <i class="pi pi-bars"></i>
-            </a>
-            <ul id="landing-menu">
-              <li><a href="">ACCUEIL</a></li>
-              <li><a href="#news">GUIDE</a></li>
-              <li><a href="#pricing">A PROPOS</a></li>
-            </ul>
-          </div>
-         
-        </div>
-      
-        <div id="features" class="landing-features">
-       
-            <router-outlet></router-outlet>
-            
-        </div>
-      
-        
+<div class="landing-body">
+  <div class="landing-wrapper">
+    <div id="home" class="landing-header">
+      <div class="landing-topbar">
+        <img src="../../../../assets/layout/images/armoirie2.png" alt="ADOBLOCK" />
+        <span class="app-title">ADOBLOCK</span>
+        <a href="#" id="landing-menu-button">
+          <i class="pi pi-bars"></i>
+        </a>
+        <ul id="landing-menu">
+          <li><a href="">ACCUEIL</a></li>
+          <li><a href="#news">GUIDE</a></li>
+          <li><a href="#pricing">A PROPOS</a></li>
+        </ul>
+      </div>
 
-        <div class="landing-footer">
-          <div class="grid">
-            <div class="col-12 lg:col-3">
-              <img src="../layout/images/logo-olympia-white.png" alt="ADOBLOCK" />
-            </div>
-            <div class="col-12 lg:col-2" *ngFor="let column of footerLinks">
-              <h6>{{ column.title }}</h6>
-              <ul>
-                <li *ngFor="let link of column.links">
-                  <a href="#">{{ link }}</a>
-                </li>
-              </ul>
-            </div>
-            <div class="col-12 lg:col-3">
-              <h6>R. SOCIAL</h6>
-              <a href="#"><i class="pi pi-twitter"></i></a>
-              <a href="#"><i class="pi pi-facebook"></i></a>
-              <a href="#"><i class="pi pi-github"></i></a>
-            </div>
-          </div>
+    </div>
+
+    <div id="features" class="landing-features">
+
+      <router-outlet></router-outlet>
+
+    </div>
+
+
+
+    <div class="landing-footer">
+      <div class="grid">
+        <div class="col-12 lg:col-3">
+          <h6>ADOBLOCK</h6>
+          <img class="footer-logo" src="../../../../assets/layout/images/armoirie.png" alt="ADOBLOCK" />
+        </div>
+        <div class="col-12 lg:col-2" *ngFor="let column of footerLinks">
+          <h6>{{ column.title }}</h6>
+          <ul>
+            <li *ngFor="let link of column.links">
+              <a href="#">{{ link }}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 lg:col-3">
+          <h6>R. SOCIAL</h6>
+          <a href="#"><i class="pi pi-twitter"></i></a>
+          <a href="#"><i class="pi pi-facebook"></i></a>
+          <a href="#"><i class="pi pi-github"></i></a>
         </div>
       </div>
- </div>
-
-  
+    </div>
+  </div>
+</div>

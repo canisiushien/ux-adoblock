@@ -13,3 +13,24 @@
 .landing-body .landing-wrapper .landing-header {
     height: 40px;
 }
+
+/* Augmenter la largeur des toasts */
+p-toast .p-toast-message {
+    max-width: 1000px;
+    /* ou plus */
+    white-space: pre-wrap;
+    /* pour retour à la ligne sur les longs textes */
+    word-break: break-word;
+}
+
+/* taille police et padding */
+p-toast .p-toast-message .p-toast-message-content {
+    font-size: 1rem;
+    padding: 1rem;
+}
+
+.footer-logo-backoffice {
+    min-height: 100px;
+    min-width: 95px;
+    vertical-align: middle;
+}

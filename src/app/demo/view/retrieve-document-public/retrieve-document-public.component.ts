@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { MessageService, Message } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { IVerifResponse, VerifResponse } from '../../domain/verif-response';
 import { DocumentService } from '../../service/document-service';
 import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
 import { EthereumService } from '../../service/ethereum.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-retrieve-document-public',
@@ -17,7 +18,6 @@ export class RetrieveDocumentPublicComponent {
   @ViewChild('dtf') form!: NgForm;
   documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de la recherche
   verifResponse: IVerifResponse = new VerifResponse();//pour contenir les données reponse de l'operation de recherche
-  message: any;
   timeoutHandle: any;
   uploadedFiles: any[] = [];
   selectedFile: File | null = null;
@@ -90,26 +90,36 @@ export class RetrieveDocumentPublicComponent {
               this.verifResponse.authenticated = result.body.authenticated;
               this.verifResponse.integrated = result.body.integrated;
               console.log("======this.verifResponse : {}", this.verifResponse);
+
+
+              //alerte notification de succès
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Document retrouvé',
+                detail: `Transaction réussie (hash: ${this.verifResponse.hashEncodedStored})`,
+                life: environment.alerteLife //en ms
+              });
             }, error => {//fin verifyDocumentFromEthereum()
               console.error("Erreur lors des verifications des hash et clé :", error);
             });//fin verifyDocumentFromEthereum()
           }).catch(error => {//fin then()
             console.error('Erreur ou document non trouvé sur Ethereum :', error);
+
+            //alerte notification d'échec
+            const revertMessage = error?.reason ? error?.reason : "Problème d'authenticité";
+            //const revertMessage = error?.error?.message || error.message || 'Transaction échouée';
+            this.messageService.add({
+              severity: 'error',
+              summary: "Échec d'authentification",
+              detail: `Cause : ${revertMessage}`,
+              life: environment.alerteLife //en ms
+            });
           });
       }, error => {//fin prepareGetDocumentFromEthereum()
         console.error("Erreur de préparation de verification sur Ethereum :", error);
       });//fin prepareGetDocumentFromEthereum()
     }//fin if()
   }//fin retrieveDocument()
-
-
-  //recuperer api message retour
-  showMessage(message: Message) {
-    this.message = message;
-    this.timeoutHandle = setTimeout(() => {
-      this.message = null;
-    }, 5000);
-  }
 
   //vider le formulaire au clic du bouton Effacer
   clear(): void {

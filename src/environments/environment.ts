@@ -8,6 +8,7 @@ const BASE_API: string = PROTOCOLE + '://' + IP_DNS + '/api/adoblock';
 export const environment = {
   production: false,
   contractAddress: '0x5fbdb2315678afecb367f032d93f642f64180aa3',
+  alerteLife: 8000,/*en ms duree d'affichage des messages d'alerte*/
 
   //génère une paire de clés cryptographiques
   generateKeysPair: BASE_API + '/generate-keys',
