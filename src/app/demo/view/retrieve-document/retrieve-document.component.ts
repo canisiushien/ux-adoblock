@@ -56,13 +56,19 @@ export class RetrieveDocumentComponent {
    */
   retrieveDocument() {
     const toDay = new Date();
+
     if (this.selectedFile) {
+
       //initialisation du formData
       const formData: FormData = new FormData();
       formData.append("file", this.selectedFile);
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
       this.documentService.prepareGetDocumentFromEthereum(formData).subscribe(response => {
+        //construction de reponse élémentaire
+        this.verifResponse.requestDate = toDay?.toLocaleString();
+        this.verifResponse.fileName = response.body.fileName;
+
         //recuperation des données de reponse de l'api de preparation de recherche
         this.documentEth = response.body;
         this.demandeTransaction = true;
@@ -74,13 +80,11 @@ export class RetrieveDocumentComponent {
             console.log('Document trouvé :', receipt);
             //traitements post-transaction
             //construction de la reponse finale
-            this.verifResponse.fileName = this.documentEth.fileName;
             this.verifResponse.newHashEncoded = this.documentEth.hashEncoded;
             this.verifResponse.hashEncodedStored = receipt.hashEncoded;
             this.verifResponse.signedHashEncodedStored = receipt.signedHashEncoded;
             this.verifResponse.publicKeyStored = receipt.publicKeyEncoded;
             this.verifResponse.horodatage = receipt.timestamp;
-            this.verifResponse.requestDate = toDay?.toLocaleString();
 
             //on appelle l'api de verifications de l'integrité et de l'authenticité
             this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(result => {
@@ -105,8 +109,7 @@ export class RetrieveDocumentComponent {
             console.error('Erreur ou document non trouvé sur Ethereum :', error);
 
             //alerte notification d'échec
-            const revertMessage = error?.reason ? error?.reason : "Problème d'authenticité";
-            //const revertMessage = error?.error?.message || error.message || 'Transaction échouée';
+            const revertMessage = this.showMessageException(error);
             this.messageService.add({
               severity: 'error',
               summary: "Échec d'authentification",
@@ -125,5 +128,29 @@ export class RetrieveDocumentComponent {
   clear(): void {
     this.form.resetForm();
     this.demandeTransaction = false;
+  }
+
+  //capture de message d'erreur venant de la blockchain
+  showMessageException(error: any): string {
+    let revertMessage = "Problème d'authenticité";
+
+    // Vérification selon la structure typique de ethers.js
+    if (error?.reason) {
+      revertMessage = error.reason;
+    } else if (error?.error?.message) {
+      // parfois encapsulé
+      const match = error.error.message.match(/reverted:\s*["'](.+?)["']/);
+      if (match) {
+        revertMessage = match[1];
+      }
+    } else if (error?.message) {
+      // fallback
+      const match = error.message.match(/reverted:\s*["'](.+?)["']/);
+      if (match) {
+        revertMessage = match[1];
+      }
+    }
+
+    return revertMessage;
   }
 }

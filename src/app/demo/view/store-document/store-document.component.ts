@@ -151,8 +151,8 @@ export class StoreDocumentComponent {
           }).catch(error => {//fin then()
             console.error("Erreur lors de l’envoi sur Ethereum :", error);
             //alerte notification d'échec
-            const revertMessage = error?.reason ? error?.reason : 'Transaction échouée';
-            //const revertMessage = error?.error?.message || error.message || 'Transaction échouée';
+            const revertMessage = this.showMessageException(error);
+            //const revertMessage = error?.reason ? error?.reason : 'Transaction échouée';//used
             this.messageService.add({
               severity: 'error',
               summary: 'Échec de la transaction',
@@ -179,4 +179,29 @@ export class StoreDocumentComponent {
     fichierCrtCharge.clear();
     fichierDocCharge.clear();
   }
+
+  //capture de message d'erreur venant de la blockchain
+  showMessageException(error: any): string {
+    let revertMessage = "Transaction échouée";
+
+    // Vérification selon la structure typique de ethers.js
+    if (error?.reason) {
+      revertMessage = error.reason;
+    } else if (error?.error?.message) {
+      // parfois encapsulé
+      const match = error.error.message.match(/reverted:\s*["'](.+?)["']/);
+      if (match) {
+        revertMessage = match[1];
+      }
+    } else if (error?.message) {
+      // fallback
+      const match = error.message.match(/reverted:\s*["'](.+?)["']/);
+      if (match) {
+        revertMessage = match[1];
+      }
+    }
+
+    return revertMessage;
+  }
+
 }
