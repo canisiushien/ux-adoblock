@@ -84,7 +84,7 @@ export class RetrieveDocumentComponent {
             this.verifResponse.hashEncodedStored = receipt.hashEncoded;
             this.verifResponse.signedHashEncodedStored = receipt.signedHashEncoded;
             this.verifResponse.publicKeyStored = receipt.publicKeyEncoded;
-            this.verifResponse.horodatage = receipt.timestamp;
+            this.verifResponse.horodatage = receipt.timestamp + ' | ' + this.convertTimestampToDateLongFr(receipt.timestamp);
 
             //on appelle l'api de verifications de l'integrité et de l'authenticité
             this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(result => {
@@ -123,6 +123,24 @@ export class RetrieveDocumentComponent {
     }//fin if()
   }//fin retrieveDocument()
 
+  //convertir un time = 1749165548 en format date = lundi 09 juin 2025 à 09:59:08 (UTC)
+  convertTimestampToDateLongFr(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
+
+    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+      weekday: 'long',    // lundi, mardi...
+      year: 'numeric',
+      month: 'long',      // juin, juillet...
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'UTC',
+      hour12: false       // mettre true pour "09:59 AM"
+    }).format(date);
+
+    return formattedDate;
+  }
 
   //vider le formulaire au clic du bouton Effacer
   clear(): void {

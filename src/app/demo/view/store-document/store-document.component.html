@@ -112,7 +112,7 @@
 			</div>
 			<div class="field grid">
 				<label htmlFor="transactionSignataire" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le signataire de la transaction sur la blockchain Ethereum">Signataire (EAO) :
+					pTooltip="le signataire de la transaction sur la blockchain Ethereum">Signataire (EOA) :
 				</label>
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="transactionSignataire" name="transactionSignataire"
@@ -154,6 +154,15 @@
 				<div class="col-12 md:col-10">
 					<input pInputText type="text" id="prixReelTransaction" name="prixReelTransaction"
 						[(ngModel)]="addResponse.prixReelTransaction" readonly />
+				</div>
+			</div>
+			<div class="field grid">
+				<label htmlFor="prixReelTransactionGWei" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
+					pTooltip="le prix réel de gaz payé pour la transaction blockchain en Gwei">Prix réel du gaz payé
+					pour la transaction (GWei) : </label>
+				<div class="col-12 md:col-10">
+					<input pInputText type="text" id="prixReelTransactionGWei" name="prixReelTransactionGWei"
+						[(ngModel)]="addResponse.prixReelTransactionGWei" readonly />
 				</div>
 			</div>
 			<div class="field grid">

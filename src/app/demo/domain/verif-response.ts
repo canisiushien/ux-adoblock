@@ -9,7 +9,7 @@ export interface IVerifResponse {
 
     integrated?: boolean; /** le contenu du doc est-il au moins integre ? */
 
-    horodatage?: number; /** date a laquelle le document a ete ajoute a la blockchain (horodatage) */
+    horodatage?: string; /** date a laquelle le document a ete ajoute a la blockchain (horodatage) */
 
     fileName?: string;  /** nom du fichier soumis a authentification (Document numerique) */
 
@@ -34,7 +34,7 @@ export class VerifResponse implements IVerifResponse {
 
         public integrated?: boolean,
 
-        public horodatage?: number,
+        public horodatage?: string,
 
         public fileName?: string,
 
