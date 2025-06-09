@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 export class RetrieveDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
+  @ViewChild('dtf2') formResultat!: NgForm;
   documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de la recherche
   verifResponse: IVerifResponse = new VerifResponse();//pour contenir les données reponse de l'operation de recherche
   timeoutHandle: any;
@@ -65,6 +66,8 @@ export class RetrieveDocumentComponent {
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
       this.documentService.prepareGetDocumentFromEthereum(formData).subscribe(response => {
+        this.clearResponseForm();
+
         //construction de reponse élémentaire
         this.verifResponse.requestDate = toDay?.toLocaleString();
         this.verifResponse.fileName = response.body.fileName;
@@ -72,7 +75,6 @@ export class RetrieveDocumentComponent {
         //recuperation des données de reponse de l'api de preparation de recherche
         this.documentEth = response.body;
         this.demandeTransaction = true;
-        console.log("======this.documentEth : {}", this.documentEth);
 
         //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
         this.ethereumService.getDocument(this.documentEth.hashEncoded)
@@ -145,6 +147,14 @@ export class RetrieveDocumentComponent {
   //vider le formulaire au clic du bouton Effacer
   clear(): void {
     this.form.resetForm();
+    this.demandeTransaction = false;
+  }
+
+  //vider le formulaire  d'affichage de reponse
+  clearResponseForm(): void {
+    this.formResultat.resetForm();
+    this.verifResponse.integrated = null;
+    this.verifResponse.authenticated = null;
     this.demandeTransaction = false;
   }
 

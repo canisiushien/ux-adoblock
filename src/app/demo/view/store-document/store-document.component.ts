@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
 export class StoreDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
+  @ViewChild('dtf2') formResultat!: NgForm;
   documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de l'ajout
   addResponse: IAddResponse = new AddResponse();//pour contenir les données reponse de l'operation d'ajout 
   dataDocument: IDataDocument = new DataDocument();//pour contenir les données du formulaire d'ajout de doc admin
@@ -102,10 +103,11 @@ export class StoreDocumentComponent {
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
       this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response => {
+        this.formResultat.resetForm();
+
         //recuperation des données de reponse de l'api de preparation et construction de reponse elementaire
         this.documentEth = response.body;
         this.addResponse.documentName = this.documentEth.fileName;
-        this.addResponse.statut = "Échec"; //par defaut
 
         //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
         this.ethereumService.storeDocument(this.documentEth.hashEncoded, this.documentEth.signedHashEncoded, this.documentEth.publicKeyEncoded)

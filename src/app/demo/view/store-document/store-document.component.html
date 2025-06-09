@@ -3,7 +3,7 @@
 	<!-- paneau de gauche: formulaire d'ajout -->
 	<div class="col-12 md:col-4">
 		<div class="card p-fluid">
-			<h5>Enregistrement de document administratif sur Ethereum</h5>
+			<h5 class="font-bold">Enregistrement de document administratif sur Ethereum</h5>
 			<form (ngSubmit)="addDocument()" #dtf="ngForm">
 				<!-- Charger le fichier .crt de clés -->
 				<div class="field">
@@ -56,124 +56,128 @@
 	<!-- paneau de droite: affichage -->
 	<div class="col-12 md:col-8">
 		<div class="card p-fluid">
-			<h5>Résultat de l'enregistrement</h5>
-			<div class="field grid">
-				<label htmlFor="statutTransaction" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="l'état d'execution de la transaction blockchain">Statut de la transaction : </label>
-				<div class="col-12 md:col-10">
-					<!--input pInputText type="text" id="statutTransaction" name="statut" [(ngModel)]="addResponse.statut"
+			<h5 class="font-bold">Résultat de l'enregistrement</h5>
+			<form #dtf2="ngForm">
+				<div class="field grid">
+					<label htmlFor="statutTransaction" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="l'état d'execution de la transaction blockchain">Statut de la transaction : </label>
+					<div class="col-12 md:col-9">
+						<!--input pInputText type="text" id="statutTransaction" name="statut" [(ngModel)]="addResponse.statut"
 						readonly /-->
-					<!--p-badge [value]="addResponse.statut"
+						<!--p-badge [value]="addResponse.statut"
 						[severity]="addResponse.statut?.toLowerCase().includes('succès') ? 'success' : 'danger'">
 					</p-badge-->
-					<input pInputText type="text" id="statutTransaction" name="statut" [(ngModel)]="addResponse.statut"
-						readonly [ngClass]="{
+						<input pInputText type="text" id="statutTransaction" name="statut"
+							[(ngModel)]="addResponse.statut" readonly [ngClass]="{
 					'statut-succes': addResponse.statut?.toLowerCase().includes('succès'),
 					'statut-echec': addResponse.statut?.toLowerCase().includes('échec')
 					}" />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="nomDocument" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le document enregistré sur la blockchain Ethereum">Document soumis : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="nomDocument" name="documentName"
-						[(ngModel)]="addResponse.documentName" disabled />
+				<div class="field grid">
+					<label htmlFor="nomDocument" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le document enregistré sur la blockchain Ethereum">Document soumis : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="nomDocument" name="documentName"
+							[(ngModel)]="addResponse.documentName" disabled />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="idTransaction" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le hash de la transaction blockchain">ID transaction : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="idTransaction" name="idTransaction"
-						[(ngModel)]="addResponse.idTransaction" disabled />
+				<div class="field grid">
+					<label htmlFor="idTransaction" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le hash de la transaction blockchain">ID transaction : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="idTransaction" name="idTransaction"
+							[(ngModel)]="addResponse.idTransaction" disabled />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="typeTx" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le type de la transaction blockchain">Type transaction : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="typeTx" name="typeTx" [(ngModel)]="addResponse.typeTx" readonly />
+				<div class="field grid">
+					<label htmlFor="typeTx" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le type de la transaction blockchain">Type transaction : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="typeTx" name="typeTx" [(ngModel)]="addResponse.typeTx"
+							readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="numBloc" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le numéro du block contenant la transaction blockchain">N° Bloc : </label>
-				<div class="col-12 md:col-4">
-					<input pInputText type="text" id="numBloc" name="numeroBlock" [(ngModel)]="addResponse.numeroBlock"
-						readonly />
-				</div>
+				<div class="field grid">
+					<label htmlFor="numBloc" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le numéro du block contenant la transaction blockchain">N° Bloc : </label>
+					<div class="col-12 md:col-4">
+						<input pInputText type="text" id="numBloc" name="numeroBlock"
+							[(ngModel)]="addResponse.numeroBlock" readonly />
+					</div>
 
-				<label htmlFor="nonce" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le nonce issu de la validation de la transaction">Nonce : </label>
-				<div class="col-12 md:col-4">
-					<input pInputText type="text" id="nonce" name="nonce" [(ngModel)]="addResponse.nonce" readonly />
+					<label htmlFor="nonce" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
+						pTooltip="le nonce issu de la validation de la transaction">Nonce : </label>
+					<div class="col-12 md:col-3">
+						<input pInputText type="text" id="nonce" name="nonce" [(ngModel)]="addResponse.nonce"
+							readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="transactionSignataire" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le signataire de la transaction sur la blockchain Ethereum">Signataire (EOA) :
-				</label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="transactionSignataire" name="transactionSignataire"
-						[(ngModel)]="addResponse.transactionSignataire" readonly />
+				<div class="field grid">
+					<label htmlFor="transactionSignataire" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le signataire de la transaction sur la blockchain Ethereum">Signataire (EOA) :
+					</label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="transactionSignataire" name="transactionSignataire"
+							[(ngModel)]="addResponse.transactionSignataire" readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="addrSmartContract" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="l'adresse du contrat intelligent deployé et exécuté sur Ethereum">Adresse du contrat
-					inteligent :
-				</label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="addrSmartContract" name="addressContrat"
-						[(ngModel)]="addResponse.addressContrat" readonly />
+				<div class="field grid">
+					<label htmlFor="addrSmartContract" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="l'adresse du contrat intelligent deployé et exécuté sur Ethereum">Adresse du contrat
+						inteligent :
+					</label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="addrSmartContract" name="addressContrat"
+							[(ngModel)]="addResponse.addressContrat" readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="totalBlockGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="la somme totale du gaz utilisé par toutes les transactions blockchain incluses dans le bloc">Gaz
-					total utilisé pour le bloc : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="totalBlockGasUtilise" name="totalBlockGasUtilise"
-						[(ngModel)]="addResponse.totalBlockGasUtilise" readonly />
+				<div class="field grid">
+					<label htmlFor="totalBlockGasUtilise" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="la somme totale du gaz utilisé par toutes les transactions blockchain incluses dans le bloc">Gaz
+						total utilisé pour le bloc : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="totalBlockGasUtilise" name="totalBlockGasUtilise"
+							[(ngModel)]="addResponse.totalBlockGasUtilise" readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="totalTransactionGasUtilise" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="la quantité de gaz réellement consommée pour exécuter la transaction blockchain">Gaz
-					réellement consommé pour la transaction : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="totalTransactionGasUtilise" name="totalTransactionGasUtilise"
-						[(ngModel)]="addResponse.totalTransactionGasUtilise" readonly />
+				<div class="field grid">
+					<label htmlFor="totalTransactionGasUtilise" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="la quantité de gaz réellement consommée pour exécuter la transaction blockchain">Gaz
+						réellement consommé pour la transaction : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="totalTransactionGasUtilise" name="totalTransactionGasUtilise"
+							[(ngModel)]="addResponse.totalTransactionGasUtilise" readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="prixReelTransaction" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la
-					transaction (Wei) : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="prixReelTransaction" name="prixReelTransaction"
-						[(ngModel)]="addResponse.prixReelTransaction" readonly />
+				<div class="field grid">
+					<label htmlFor="prixReelTransaction" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la
+						transaction (Wei) : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="prixReelTransaction" name="prixReelTransaction"
+							[(ngModel)]="addResponse.prixReelTransaction" readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="prixReelTransactionGWei" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le prix réel de gaz payé pour la transaction blockchain en Gwei">Prix réel du gaz payé
-					pour la transaction (GWei) : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="prixReelTransactionGWei" name="prixReelTransactionGWei"
-						[(ngModel)]="addResponse.prixReelTransactionGWei" readonly />
+				<div class="field grid">
+					<label htmlFor="prixReelTransactionGWei" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le prix réel de gaz payé pour la transaction blockchain en Gwei">Prix réel du gaz payé
+						pour la transaction (GWei) : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="prixReelTransactionGWei" name="prixReelTransactionGWei"
+							[(ngModel)]="addResponse.prixReelTransactionGWei" readonly />
+					</div>
 				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="prixReelTransactionEther" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
-					pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la
-					transaction (ETH) : </label>
-				<div class="col-12 md:col-10">
-					<input pInputText type="text" id="prixReelTransactionEther" name="prixReelTransactionEther"
-						[(ngModel)]="addResponse.prixReelTransactionEther" readonly />
+				<div class="field grid">
+					<label htmlFor="prixReelTransactionEther" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+						pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la
+						transaction (ETH) : </label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" id="prixReelTransactionEther" name="prixReelTransactionEther"
+							[(ngModel)]="addResponse.prixReelTransactionEther" readonly />
+					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </div>

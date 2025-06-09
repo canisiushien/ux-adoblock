@@ -5,7 +5,7 @@
         <form (ngSubmit)="retrieveDocument()" #dtf="ngForm">
             <div class="card p-fluid">
                 <!-- titre panneau -->
-                <h5>Authentification de document administratif</h5>
+                <h5 class="font-bold">Authentification de document administratif</h5>
                 <!-- fichier pdf ou word -->
                 <div class="field">
                     <label htmlFor="docNum">Document numérique (PDF ou Word)<span class="p-error">*</span></label>
@@ -33,83 +33,87 @@
                     <p-tag *ngIf="!verifResponse.authenticated" styleClass="mr-2" icon="pi pi-times" severity="danger"
                         [rounded]="true" value=" Le document n'est pas authentique "></p-tag>
                 </p>
-                <!-- nom du document soumis à authentification -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="fileName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                        pTooltip="la document administratif soumis à authentification">Document vérifié : </label>
-                    <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="fileName" name="fileName" [(ngModel)]="verifResponse.fileName"
-                            disabled="true" />
+                <form #dtf2="ngForm">
+                    <!-- nom du document soumis à authentification -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="fileName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                            pTooltip="la document administratif soumis à authentification">Document vérifié : </label>
+                        <div class="col-12 md:col-9">
+                            <input pInputText type="text" id="fileName" name="fileName"
+                                [(ngModel)]="verifResponse.fileName" disabled="true" />
+                        </div>
                     </div>
-                </div>
-                <!-- integrité du document soumis à authentification -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="integrate" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                        pTooltip="comparativement au document original, le contenu du document à authentifier est-il intacte ?">Le
-                        contenu du document est-il intègre ? </label>
-                    <div class="col-12 md:col-9" *ngIf="demandeTransaction">
-                        <p-tag *ngIf="verifResponse.integrated" styleClass="mr-2" icon="pi pi-check" severity="success"
-                            [rounded]="true" value=" OUI "></p-tag>
-                        <p-tag *ngIf="!verifResponse.integrated" styleClass="mr-2" icon="pi pi-times" severity="danger"
-                            [rounded]="true" value=" NON "></p-tag>
+                    <!-- integrité du document soumis à authentification -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="integrate" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                            pTooltip="comparativement au document original, le contenu du document à authentifier est-il intacte ?">Le
+                            contenu du document est-il intègre ? </label>
+                        <div class="col-12 md:col-9" *ngIf="demandeTransaction">
+                            <p-tag *ngIf="verifResponse.integrated" styleClass="mr-2" icon="pi pi-check"
+                                severity="success" [rounded]="true" value=" OUI "></p-tag>
+                            <p-tag *ngIf="!verifResponse.integrated" styleClass="mr-2" icon="pi pi-times"
+                                severity="danger" [rounded]="true" value=" NON "></p-tag>
+                        </div>
                     </div>
-                </div>
-                <!-- date de demande d'authentification -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="dateDemande" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                        pTooltip="la date de votre demande d'authentification">Date de la demande : </label>
-                    <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="dateDemande" name="requestDate"
-                            [(ngModel)]="verifResponse.requestDate" readonly="true" />
+                    <!-- date de demande d'authentification -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="dateDemande" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                            pTooltip="la date de votre demande d'authentification">Date de la demande : </label>
+                        <div class="col-12 md:col-9">
+                            <input pInputText type="text" id="dateDemande" name="requestDate"
+                                [(ngModel)]="verifResponse.requestDate" readonly="true" />
+                        </div>
                     </div>
-                </div>
-                <!-- horodatage blockchain du document soumis à authentification -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="horodatage" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                        pTooltip="l'horodatage électronique Ethereum du document administratif">Horodatage blockchain :
-                    </label>
-                    <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="horodatage" name="horodatage"
-                            [(ngModel)]="verifResponse.horodatage" readonly="true" />
+                    <!-- horodatage blockchain du document soumis à authentification -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="horodatage" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                            pTooltip="l'horodatage électronique Ethereum du document administratif">Horodatage
+                            blockchain :
+                        </label>
+                        <div class="col-12 md:col-9">
+                            <input pInputText type="text" id="horodatage" name="horodatage"
+                                [(ngModel)]="verifResponse.horodatage" readonly="true" />
+                        </div>
                     </div>
-                </div>
-                <!-- empreinte numerique du document à authentification -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="empreinteNum" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                        pTooltip="l'empreinte numerique (hash) du document administratif vérifié">Empreinte numérique du
-                        document : </label>
-                    <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="empreinteNum" name="hashEncodedStored"
-                            [(ngModel)]="verifResponse.hashEncodedStored" readonly="true" />
+                    <!-- empreinte numerique du document à authentification -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="empreinteNum" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                            pTooltip="l'empreinte numerique (hash) du document administratif vérifié">Empreinte
+                            numérique du
+                            document : </label>
+                        <div class="col-12 md:col-9">
+                            <input pInputText type="text" id="empreinteNum" name="hashEncodedStored"
+                                [(ngModel)]="verifResponse.hashEncodedStored" readonly="true" />
+                        </div>
                     </div>
-                </div>
-                <!-- clé publique associée -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="clePublique" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                        pTooltip="la clé publique cryptographique associée">Clé publique associée : </label>
-                    <div class="col-12 md:col-9">
-                        <textarea rows="2" cols="60" pInputTextarea id="clePublic" name="publicKeyStored"
-                            [(ngModel)]="verifResponse.publicKeyStored" readonly></textarea>
+                    <!-- clé publique associée -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="clePublique" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                            pTooltip="la clé publique cryptographique associée">Clé publique associée : </label>
+                        <div class="col-12 md:col-9">
+                            <textarea rows="2" cols="60" pInputTextarea id="clePublic" name="publicKeyStored"
+                                [(ngModel)]="verifResponse.publicKeyStored" readonly></textarea>
+                        </div>
                     </div>
-                </div>
-                <!-- type de cle -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="typeCle" class="col-12 mb-2 md:col-3 md:mb-0"
-                        pTooltip="le type d'algo cryptographique des clés générées"><b>Type de clé : </b></label>
-                    <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="typeCle" name="typeKey" [(ngModel)]="verifResponse.typeKey"
-                            disabled />
+                    <!-- type de cle -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="typeCle" class="col-12 mb-2 md:col-3 md:mb-0"
+                            pTooltip="le type d'algo cryptographique des clés générées"><b>Type de clé : </b></label>
+                        <div class="col-12 md:col-9">
+                            <input pInputText type="text" id="typeCle" name="typeKey"
+                                [(ngModel)]="verifResponse.typeKey" disabled />
+                        </div>
                     </div>
-                </div>
-                <!-- courbe elliptique -->
-                <div class="field grid col-12 md:col-12">
-                    <label htmlFor="ellipticCurve" class="col-12 mb-2 md:col-3 md:mb-0"
-                        pTooltip="la courbe élliptique utilisée"><b>Courbe élliptique : </b></label>
-                    <div class="col-12 md:col-9">
-                        <input pInputText type="text" id="ellipticCurve" name="ellipticCurve"
-                            [(ngModel)]="verifResponse.ellipticCurve" disabled />
+                    <!-- courbe elliptique -->
+                    <div class="field grid col-12 md:col-12">
+                        <label htmlFor="ellipticCurve" class="col-12 mb-2 md:col-3 md:mb-0"
+                            pTooltip="la courbe élliptique utilisée"><b>Courbe élliptique : </b></label>
+                        <div class="col-12 md:col-9">
+                            <input pInputText type="text" id="ellipticCurve" name="ellipticCurve"
+                                [(ngModel)]="verifResponse.ellipticCurve" disabled />
+                        </div>
                     </div>
-                </div>
+                </form>
             </p-fieldset>
         </div>
     </div>
