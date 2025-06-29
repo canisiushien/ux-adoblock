@@ -23,7 +23,9 @@ export interface IAddResponse {
 
     totalTransactionGasUtilise?: number; /** la quantite de gas réellement consommée pour exécuter la transaction */
 
-    prixReelTransaction?: number; /** le prix reel de gaz paye pour la transaction */
+    prixReelTransaction?: number; /** le prix reel (en Wei) de gaz paye pour la transaction */
+
+    prixReelTransactionGWei?: number; /** le prix reel (en GWei) de gaz paye pour la transaction */
 
     prixReelTransactionEther?: number;
 
@@ -51,6 +53,8 @@ export class AddResponse implements IAddResponse {
         public totalTransactionGasUtilise?: number,
 
         public prixReelTransaction?: number,
+
+        public prixReelTransactionGWei?: number,
 
         public prixReelTransactionEther?: number,
 

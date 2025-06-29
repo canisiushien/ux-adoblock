@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
 export class StoreDocumentComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
+  @ViewChild('dtf2') formResultat!: NgForm;
   documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de l'ajout
   addResponse: IAddResponse = new AddResponse();//pour contenir les données reponse de l'operation d'ajout 
   dataDocument: IDataDocument = new DataDocument();//pour contenir les données du formulaire d'ajout de doc admin
@@ -102,9 +103,11 @@ export class StoreDocumentComponent {
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
       this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response => {
-        //recuperation des données de reponse de l'api de preparation
+        this.formResultat.resetForm();
+
+        //recuperation des données de reponse de l'api de preparation et construction de reponse elementaire
         this.documentEth = response.body;
-        console.log("======this.documentEth : {}", this.documentEth);
+        this.addResponse.documentName = this.documentEth.fileName;
 
         //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
         this.ethereumService.storeDocument(this.documentEth.hashEncoded, this.documentEth.signedHashEncoded, this.documentEth.publicKeyEncoded)
@@ -114,7 +117,6 @@ export class StoreDocumentComponent {
             const nonce = result.nonce;
             //traitements post-transaction
             //construction de la reponse finale
-            this.addResponse.documentName = this.documentEth.fileName;
             this.addResponse.transactionSignataire = receipt.from;
             this.addResponse.addressContrat = receipt.to;
             this.addResponse.numeroBlock = receipt.blockNumber;
@@ -124,6 +126,7 @@ export class StoreDocumentComponent {
             this.addResponse.totalBlockGasUtilise = Number(receipt.cumulativeGasUsed);
             this.addResponse.totalTransactionGasUtilise = Number(receipt.gasUsed);
             this.addResponse.prixReelTransaction = Number(receipt.gasUsed) * Number(receipt.gasPrice);
+            this.addResponse.prixReelTransactionGWei = Number(this.addResponse.prixReelTransaction / Math.pow(10, 9));
             this.addResponse.prixReelTransactionEther = Number(formatEther(BigInt(receipt.gasUsed) * BigInt(receipt.gasPrice))); //convertir prixReelTransaction de Wei en ETH
             switch (true) {//valeurs possibles de typeTx
               case receipt.type === 0:

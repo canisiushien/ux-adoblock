@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 export class RetrieveDocumentPublicComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
+  @ViewChild('dtf2') formResultat!: NgForm;
   documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de la recherche
   verifResponse: IVerifResponse = new VerifResponse();//pour contenir les données reponse de l'operation de recherche
   timeoutHandle: any;
@@ -63,6 +64,9 @@ export class RetrieveDocumentPublicComponent {
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
       this.documentService.prepareGetDocumentFromEthereum(formData).subscribe(response => {
+        //this.formResultat.resetForm();
+        this.clearResponseForm();
+
         //construction de reponse élémentaire
         this.verifResponse.requestDate = toDay?.toLocaleString();
         this.verifResponse.fileName = response.body.fileName;
@@ -70,7 +74,6 @@ export class RetrieveDocumentPublicComponent {
         //recuperation des données de reponse de l'api de preparation de recherche
         this.documentEth = response.body;
         this.demandeTransaction = true;
-        console.log("======this.documentEth : {}", this.documentEth);
 
         //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
         this.ethereumService.getDocument(this.documentEth.hashEncoded)
@@ -82,7 +85,7 @@ export class RetrieveDocumentPublicComponent {
             this.verifResponse.hashEncodedStored = receipt.hashEncoded;
             this.verifResponse.signedHashEncodedStored = receipt.signedHashEncoded;
             this.verifResponse.publicKeyStored = receipt.publicKeyEncoded;
-            this.verifResponse.horodatage = receipt.timestamp;
+            this.verifResponse.horodatage = receipt.timestamp + ' | ' + this.convertTimestampToDateLongFr(receipt.timestamp);
 
             //on appelle l'api de verifications de l'integrité et de l'authenticité
             this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(result => {
@@ -122,9 +125,35 @@ export class RetrieveDocumentPublicComponent {
     }//fin if()
   }//fin retrieveDocument()
 
+  //convertir un time = 1749165548 en format date = lundi 09 juin 2025 à 09:59:08 (UTC)
+  convertTimestampToDateLongFr(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
+
+    const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+      weekday: 'long',    // lundi, mardi...
+      year: 'numeric',
+      month: 'long',      // juin, juillet...
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'UTC',
+      hour12: false       // mettre true pour "09:59 AM"
+    }).format(date);
+
+    return formattedDate;
+  }
   //vider le formulaire au clic du bouton Effacer
   clear(): void {
     this.form.resetForm();
+    this.demandeTransaction = false;
+  }
+
+  //vider le formulaire  d'affichage de reponse
+  clearResponseForm(): void {
+    this.formResultat.resetForm();
+    this.verifResponse.integrated = null;
+    this.verifResponse.authenticated = null;
     this.demandeTransaction = false;
   }
 
