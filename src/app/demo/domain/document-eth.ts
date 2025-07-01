@@ -18,7 +18,7 @@ export interface IDocumentETH {
     publicKeyEncoded?: string;
 
     /** horodatage de stockage genere automatiquement par Ethereum */
-    timestamp?: number;
+    timestamp?: string;
 }
 
 export class DocumentETH implements IDocumentETH{
@@ -32,6 +32,6 @@ constructor(
 
     public publicKeyEncoded?: string,
 
-    public timestamp?: number
+    public timestamp?: string
 ){}
 }
