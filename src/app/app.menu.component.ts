@@ -13,7 +13,7 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         this.model = [
-            { label: 'Accueil', icon: 'pi  pi-fw pi-home', routerLink: ['/admin']},
+            { label: 'Accueil', icon: 'pi  pi-fw pi-home', routerLink: ['/admin'] },
             {
                 label: 'Obtenir clés privée/publique', icon: 'pi pi-fw pi-key', routerLink: ['/admin/generate-keys']
             },
@@ -29,11 +29,13 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Utilisateur', icon: 'pi pi-fw pi-user', routerLink: ['/utilities'],
                 items: [
-                    {label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['utilities/icons']},
-                    {label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank'},
+                    { label: 'Mon Wallet', icon: 'pi pi-fw pi-prime', routerLink: ['/admin/documentation'] },
+                    { label: 'Mes transactions', icon: 'pi pi-fw pi-prime', routerLink: ['/admin/documentation'] },
+                    //{label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['utilities/icons']},
+                    //{label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank'},
                 ]
             }
-           
+
             // {//a supprimer
             //     label: 'UI Kit', icon: 'pi pi-fw pi-star-fill', routerLink: ['/uikit'],
             //     items: [

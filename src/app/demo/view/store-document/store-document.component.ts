@@ -166,6 +166,13 @@ export class StoreDocumentComponent {
 
       }, error => {//fin prepareStoreDocumentToEthereum()
         console.error("Erreur de préparation du stockage sur Ethereum :", error);
+        const revertMessage = "Clés asymétriques invalides."; //recuperer l'exception venant du backend ??????
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Échec de la transaction',
+          detail: `Cause : ${revertMessage}`,
+          life: environment.alerteLife //en ms
+        });
       });
     }//fin if()
   }//fin addDocument()
