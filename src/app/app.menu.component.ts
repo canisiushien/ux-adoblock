@@ -18,6 +18,9 @@ export class AppMenuComponent implements OnInit {
                 label: 'Obtenir clés privée/publique', icon: 'pi pi-fw pi-key', routerLink: ['/admin/generate-keys']
             },
             {
+                label: 'Revoquer clés privée/publique', icon: 'pi pi-fw pi-trash', routerLink: ['/admin/revoke-keys']
+            },
+            {
                 label: 'Enregistrer document', icon: 'pi pi-fw pi-pencil', routerLink: ['/admin/store-doc']
             },
             {

@@ -139,6 +139,7 @@ import { RetrieveDocumentComponent } from './demo/view/retrieve-document/retriev
 import { GenerateKeysPaireComponent } from './demo/view/generate-keys-paire/generate-keys-paire.component';
 import { FrontPublicComponent } from './demo/view/front-public/front-public.component';
 import { MessageService } from 'primeng/api';
+import { RevokeKeysPairComponent } from './demo/view/revoke-keys-pair/revoke-keys-pair.component';
 
 @NgModule({
     imports: [
@@ -267,6 +268,7 @@ import { MessageService } from 'primeng/api';
         BlocksComponent,
         BlockViewer,
         GenerateKeysPaireComponent,
+        RevokeKeysPairComponent,
         StoreDocumentComponent,
         RetrieveDocumentComponent,
         RetrieveDocumentPublicComponent,

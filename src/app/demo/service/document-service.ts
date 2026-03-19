@@ -29,6 +29,16 @@ export class DocumentService {
         return this.http.get<IKeysPair>(`${environment.generateKeysPair}`, { observe: 'response' });
     }
 
+    /**
+     * extrait et calcul le necessaire pour la revocation de clés sur la blockchain
+     *
+     * @param keys 
+     * @returns 
+     */
+    prepareRevokeKeyToEthereum(keys: any): Observable<EntityDocumentETHType> {
+        return this.http.post<IDocumentETH>(environment.prepareRevokeToBlockchain, keys, { observe: 'response' });
+    }
+
 
     /**
      * extrait et calcul le necessaire pour l'enregistrement d'un document

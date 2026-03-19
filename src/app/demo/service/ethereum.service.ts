@@ -84,11 +84,52 @@ export class EthereumService {
         hashEncoded: doc[0],
         signedHashEncoded: doc[1],
         publicKeyEncoded: doc[2],
-        timestamp: Number(doc[3])
+        timestamp: Number(doc[3]),
+        isKeyRevoked: doc[4]
       };
     } catch (error: any) {
       console.error("Erreur lors de l’appel du contrat :", error);
       throw error;
+    }
+  }
+
+  /**
+   * Service Ethereum permettant de demander des transactions de revocation via le contrat intelligent
+   * 
+   * @param _publicKeyEncoded : la clé publique de l'auteur du document à stocker
+   * @returns 
+   */
+  async revokePairKeys(_publicKeyEncoded: string): Promise<any> {
+    console.log('Appel de ethereum.service.revokeKey()');
+    try {
+      await this.initContract();
+      const tx = await this.contract.revokeKey(_publicKeyEncoded
+        //, { gasLimit: this.gasEstimated  /* valeur standard ajustable. Exigée dans EIP-1559 obsolete */ }
+      );
+      console.log('========tx = ', tx);
+      const receipt = await tx.wait();
+
+      // Écouter l'événement
+      const event = receipt.logs?.[0];
+      console.log('Event reçu :', event);
+
+      //retourner la reponse venant de la blockchain
+      return {
+        receipt,
+        nonce: tx.nonce,
+        status: receipt.status
+      };
+    } catch (error: any) {
+      console.error('Erreur revokeKey:', error);
+      const reason =
+        error?.reason ||
+        error?.error?.message ||
+        error?.data?.message ||
+        error?.message;
+
+      console.log('Raison:', reason);
+
+      throw new Error(reason);
     }
   }
 }

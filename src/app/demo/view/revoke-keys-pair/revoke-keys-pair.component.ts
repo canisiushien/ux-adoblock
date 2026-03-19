@@ -1,33 +1,32 @@
 import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AddResponse, IAddResponse } from '../../domain/add-response';
-import { NgForm } from '@angular/forms';
+import { DataDocument, IDataDocument } from '../../domain/data-document';
 import { DocumentService } from '../../service/document-service';
 import { EthereumService } from '../../service/ethereum.service';
-import { DataDocument, IDataDocument } from '../../domain/data-document';
 import { DocumentETH, IDocumentETH } from '../../domain/document-eth';
-import { formatEther } from "ethers";
+import { formatEther } from 'ethers';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-store-document',
-  templateUrl: './store-document.component.html',
-  styleUrls: ['./store-document.component.scss'],
+  selector: 'app-revoke-keys-pair',
+  templateUrl: './revoke-keys-pair.component.html',
+  styleUrls: ['./revoke-keys-pair.component.scss'],
   providers: [MessageService]
 })
-export class StoreDocumentComponent {
+export class RevokeKeysPairComponent {
   //=========== declarations necessaires ===================
   @ViewChild('dtf') form!: NgForm;
   @ViewChild('dtf2') formResultat!: NgForm;
-  documentEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de l'ajout
-  addResponse: IAddResponse = new AddResponse();//pour contenir les données reponse de l'operation d'ajout 
-  dataDocument: IDataDocument = new DataDocument();//pour contenir les données du formulaire d'ajout de doc admin
+  prepaEth: IDocumentETH = new DocumentETH();//pour contenir les données calculées lors de la preparation de la revocation
+  revokeResponse: IAddResponse = new AddResponse();//pour contenir les données reponse de l'operation d'ajout 
+  dataRevoke: IDataDocument = new DataDocument();//pour contenir les données du formulaire d'ajout de doc admin
   timeoutHandle: any;
   uploadedFiles: any[] = [];
   selectedFile: File | null = null;
   crtSelectedFile: File | null = null;
   fichierCrtCharge: boolean = false;
-  fichierDocCharge: boolean = false;
 
   //constructeur pour injection des services necessaires
   constructor(private readonly messageService: MessageService,
@@ -41,14 +40,13 @@ export class StoreDocumentComponent {
   // Vérifie si le formulaire est valide
   formValide(): boolean {
     if (this.fichierCrtCharge) {
-      return this.fichierDocCharge; // Si .crt chargé, seul doc est requis
+      return true; // Si .crt chargé, seul doc est requis
     } else {
       //!!this.dataDocument.clePrivee retourne true si la chaîne n'est pas vide, false sinon.
       //!!this.dataDocument.clePublique fait la même chose.
-      return this.fichierDocCharge && !!this.dataDocument.clePrivee && !!this.dataDocument.clePublic;
+      return !!this.dataRevoke.clePrivee && !!this.dataRevoke.clePublic;
     }
   }
-
 
   // Vérifie si le fichier .crt de clés est chargé
   onCrtFileSelect(event: any): void {
@@ -66,22 +64,6 @@ export class StoreDocumentComponent {
     }
   }
 
-  // Gestion de la sélection du fichier de document administratif
-  onFileSelect(event: any): void {
-    this.fichierDocCharge = event.files.length > 0;  // Vérifie si le fichier PDF/Word est chargé
-    const file: File = event.files[0];
-
-    if (file) {
-      // Vérification du type de fichier
-      const allowedTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/pdf"];
-      if (!allowedTypes.includes(file.type)) {
-        console.error("Type de fichier non autorisé !");
-        return;
-      }
-      this.selectedFile = file;
-    }
-  }
-
   /**
    * Ajout de document digital dans Ethereum.
    * 
@@ -90,67 +72,66 @@ export class StoreDocumentComponent {
    * 3.appel (dans 2) Promise de la fonction storeAdministrativeDocument du contrat afin de stocker les resultats de 2.
    * 4.notifier UI du resultat final d'ajout
    */
-  addDocument() {
+  revokeKeys() {
     const start = performance.now();
 
-    if (this.dataDocument) {
+    if (this.dataRevoke) {
       //initialisation du formData
       const formData: FormData = new FormData();
-      this.dataDocument.docAdminFile = this.selectedFile;
-      this.dataDocument.keysFile = this.crtSelectedFile;
-      formData.append("privateKey", this.dataDocument.clePrivee);
-      formData.append("publicKey", this.dataDocument.clePublic);
-      formData.append("file", this.dataDocument.docAdminFile);
-      formData.append("fileKey", this.dataDocument.keysFile);
+      this.dataRevoke.keysFile = this.crtSelectedFile;
+      formData.append("privateKey", this.dataRevoke.clePrivee);
+      formData.append("publicKey", this.dataRevoke.clePublic);
+      formData.append("fileKey", this.dataRevoke.keysFile);
 
       //appel de l'api de preparation du fichier (extraction et calcul des données)
-      this.documentService.prepareStoreDocumentToEthereum(formData).subscribe(response => {
+      this.documentService.prepareRevokeKeyToEthereum(formData).subscribe(response => {
         this.formResultat.resetForm();
 
         //recuperation des données de reponse de l'api de preparation et construction de reponse elementaire
-        this.documentEth = response.body;
-        this.addResponse.documentName = this.documentEth.fileName;
+        this.prepaEth = response.body;
+        this.revokeResponse.publicKeyEncoded = this.prepaEth.publicKeyEncoded;
+        console.log("===============", this.prepaEth);
 
         //appel du contrat intelligent via le service ethereum. Methode de type Promise et non Observable
-        this.ethereumService.storeDocument(this.documentEth.hashEncoded, this.documentEth.signedHashEncoded, this.documentEth.publicKeyEncoded)
+        this.ethereumService.revokePairKeys(this.prepaEth.publicKeyEncoded)
           .then(result => {
             console.log("Transaction réussie : ", result);
             const receipt = result.receipt;
             const nonce = result.nonce;
             //traitements post-transaction
             //construction de la reponse finale
-            this.addResponse.transactionSignataire = receipt.from;
-            this.addResponse.addressContrat = receipt.to;
-            this.addResponse.numeroBlock = receipt.blockNumber;
-            this.addResponse.nonce = Number(nonce);
-            this.addResponse.statut = receipt.status === 1 ? "Succès (Transaction minée)" : "Échec"; //1 = Succès, 0 = Echec
-            this.addResponse.idTransaction = receipt.hash;
-            this.addResponse.totalBlockGasUtilise = Number(receipt.cumulativeGasUsed);
-            this.addResponse.totalTransactionGasUtilise = Number(receipt.gasUsed);
-            this.addResponse.prixReelTransaction = Number(receipt.gasUsed) * Number(receipt.gasPrice);
-            this.addResponse.prixReelTransactionGWei = Number(this.addResponse.prixReelTransaction / Math.pow(10, 9));
-            this.addResponse.prixReelTransactionEther = Number(formatEther(BigInt(receipt.gasUsed) * BigInt(receipt.gasPrice))); //convertir prixReelTransaction de Wei en ETH
+            this.revokeResponse.transactionSignataire = receipt.from;
+            this.revokeResponse.addressContrat = receipt.to;
+            this.revokeResponse.numeroBlock = receipt.blockNumber;
+            this.revokeResponse.nonce = Number(nonce);
+            this.revokeResponse.statut = receipt.status === 1 ? "Succès (Transaction minée)" : "Échec"; //1 = Succès, 0 = Echec
+            this.revokeResponse.idTransaction = receipt.hash;
+            this.revokeResponse.totalBlockGasUtilise = Number(receipt.cumulativeGasUsed);
+            this.revokeResponse.totalTransactionGasUtilise = Number(receipt.gasUsed);
+            this.revokeResponse.prixReelTransaction = Number(receipt.gasUsed) * Number(receipt.gasPrice);
+            this.revokeResponse.prixReelTransactionGWei = Number(this.revokeResponse.prixReelTransaction / Math.pow(10, 9));
+            this.revokeResponse.prixReelTransactionEther = Number(formatEther(BigInt(receipt.gasUsed) * BigInt(receipt.gasPrice))); //convertir prixReelTransaction de Wei en ETH
             switch (true) {//valeurs possibles de typeTx
               case receipt.type === 0:
-                this.addResponse.typeTx = "(0) EIP-1559 : Legacy Transaction";
+                this.revokeResponse.typeTx = "(0) EIP-1559 : Legacy Transaction";
                 break;
               case receipt.type === 1:
-                this.addResponse.typeTx = "(1) EIP-2930 : Access List Transaction";
+                this.revokeResponse.typeTx = "(1) EIP-2930 : Access List Transaction";
                 break;
               case receipt.type === 2:
-                this.addResponse.typeTx = "(2) EIP-1559 : transaction (standard recommandé)";
+                this.revokeResponse.typeTx = "(2) EIP-1559 : transaction (standard recommandé)";
                 break;
               default:
-                this.addResponse.typeTx = "Inconnu";
+                this.revokeResponse.typeTx = "Inconnu";
             }
 
-            console.log("======this.addResponse : {}", this.addResponse);
+            console.log("======this.revokeResponse : {}", this.revokeResponse);
 
             //alerte notification de succès
             this.messageService.add({
               severity: 'success',
-              summary: 'Document enregistré',
-              detail: `Transaction réussie (hash: ${this.addResponse.idTransaction})`,
+              summary: 'Clés revoquées',
+              detail: `Transaction réussie (hash: ${this.revokeResponse.idTransaction})`,
               life: environment.alerteLife //en ms
             });
 
@@ -158,7 +139,7 @@ export class StoreDocumentComponent {
             //mesure de temps de reponse
             const end = performance.now();
             const duration = end - start;
-            console.log(`Temps traitement addDocument() après signature : ${duration.toFixed(2)} ms`);
+            console.log(`Temps traitement revokeResponse() après signature : ${duration.toFixed(2)} ms`);
           }).catch(error => {//fin then()
             console.error("Erreur lors de l’envoi sur Ethereum :", error);
             //alerte notification d'échec
@@ -172,8 +153,8 @@ export class StoreDocumentComponent {
             });
           });
 
-      }, error => {//fin prepareStoreDocumentToEthereum()
-        console.error("Erreur de préparation du stockage sur Ethereum :", error);
+      }, error => {//fin prepareRevokeKeyToEthereum()
+        console.error("Erreur de préparation du revocation :", error);
         const revertMessage = "Clés asymétriques invalides."; //recuperer l'exception venant du backend ??????
         this.messageService.add({
           severity: 'error',
@@ -187,20 +168,17 @@ export class StoreDocumentComponent {
     //mesure de temps de reponse
     const end = performance.now();
     const duration = end - start;
-    console.log(`Temps traitement addDocument() avant signature : ${duration.toFixed(2)} ms`);
-  }//fin addDocument()
-
+    console.log(`Temps traitement revokeKeys() avant signature : ${duration.toFixed(2)} ms`);
+  }//fin revokeKeys()
 
   //vider le formulaire au clic du bouton Effacer
-  clear(fichierCrtCharge: any, fichierDocCharge: any): void {
+  clear(fichierCrtCharge: any): void {
     //vide les champs textuels du formulaire
     this.form.resetForm();
     //réinitialise les discriminants
     this.fichierCrtCharge = false;
-    this.fichierDocCharge = false;
     //vide les champs uploadFile
     fichierCrtCharge.clear();
-    fichierDocCharge.clear();
   }
 
   //capture de message d'erreur venant de la blockchain
@@ -226,5 +204,4 @@ export class StoreDocumentComponent {
 
     return revertMessage;
   }
-
 }

@@ -1,0 +1,144 @@
+<p-toast></p-toast>
+<div class="grid">
+    <!-- paneau de gauche: formulaire d'ajout -->
+    <div class="col-12 md:col-4">
+        <div class="card p-fluid">
+            <h5 class="font-bold">Revocation de paire de clées cryptographiques</h5>
+            <form (ngSubmit)="revokeKeys()" #dtf="ngForm">
+                <!-- Charger le fichier .crt de clés -->
+                <div class="field">
+                    <label htmlFor="fichierCrt" class="font-bold">Charger le fichier .crt de clés</label>
+                    <p-fileUpload #fu1 [auto]="true" (onSelect)="onCrtFileSelect($event)" fileLimit="1"
+                        class="full-width font-bold" multiple=false accept=".crt"
+                        invalidFileTypeMessageSummary="Type de fichier non autorisé" maxFileSize="1000000"
+                        invalidFileSizeMessageSummary="Votre fichier est trop volumineux"
+                        chooseLabel="Chargez le fichier .crt de clés">
+                    </p-fileUpload>
+                </div>
+                <!-- cle privee (désactivée si fichier .crt est chargé) -->
+                <div class="field">
+                    <label htmlFor="clePrivee" class="font-bold">Clé privée du signataire<span class="p-error"
+                            *ngIf="!fichierCrtCharge">*</span></label>
+                    <textarea [disabled]="fichierCrtCharge" [required]="!fichierCrtCharge" rows="3" cols="50"
+                        placeholder="Renseignez votre clé privée cryptographique" pInputTextarea id="clePrivee"
+                        name="clePrivee" [(ngModel)]="dataRevoke.clePrivee"></textarea>
+                </div>
+                <!-- cle publique (désactivée si fichier .crt est chargé) -->
+                <div class="field">
+                    <label htmlFor="clePublique" class="font-bold">Clé publique du signataire<span class="p-error"
+                            *ngIf="!fichierCrtCharge">*</span></label>
+                    <textarea [disabled]="fichierCrtCharge" [required]="!fichierCrtCharge" rows="3" cols="50"
+                        placeholder="Renseignez votre clé publique cryptographique" pInputTextarea id="clePublique"
+                        name="clePublic" [(ngModel)]="dataRevoke.clePublic"></textarea>
+                </div>
+                <!-- boutons enregistrement et vidage formulaire -->
+                <div class="field">
+                    <button pButton pRipple type="submit" [disabled]="!formValide()" icon="pi pi-check"
+                        label="Revoquer la paire de clés sur Ethereum"
+                        class="p-button-success font-bold mr-2 mb-2"></button>
+                    <button pButton pRipple type="reset" (click)="clear(fu1)" label="Effacer le formulaire"
+                        icon="pi pi-times" class="p-button-info p-button-text font-bold mr-2 mb-2"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- paneau de droite: affichage -->
+    <div class="col-12 md:col-8">
+        <div class="card p-fluid">
+            <h5 class="font-bold">Résultat de revocation de clés</h5>
+            <form #dtf2="ngForm">
+                <div class="field grid">
+                    <label htmlFor="statutTransaction" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="l'état d'execution de la transaction blockchain">Statut de la transaction : </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="statutTransaction" name="statut"
+                            [(ngModel)]="revokeResponse.statut" readonly [ngClass]="{
+					'statut-succes': revokeResponse.statut?.toLowerCase().includes('succès'),
+					'statut-echec': revokeResponse.statut?.toLowerCase().includes('échec')
+					}" />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="pubKeyRevoked" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="la clé revoquée">Clé revoquée : </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="pubKeyRevoked" name="publicKey"
+                            [(ngModel)]="revokeResponse.publicKeyEncoded" disabled />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="idTransaction" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="le hash de la transaction blockchain">ID transaction : </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="idTransaction" name="idTransaction"
+                            [(ngModel)]="revokeResponse.idTransaction" disabled />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="typeTx" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="le type de la transaction blockchain">Type transaction : </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="typeTx" name="typeTx" [(ngModel)]="revokeResponse.typeTx"
+                            readonly />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="numBloc" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="le numéro du block contenant la transaction blockchain">N° Bloc : </label>
+                    <div class="col-12 md:col-4">
+                        <input pInputText type="text" id="numBloc" name="numeroBlock"
+                            [(ngModel)]="revokeResponse.numeroBlock" readonly />
+                    </div>
+
+                    <label htmlFor="nonce" class="col-12 mb-2 md:col-2 md:mb-0 font-bold"
+                        pTooltip="le nonce issu de la validation de la transaction">
+                        Nonce
+                        :
+                    </label>
+                    <div class="col-12 md:col-3">
+                        <input pInputText type="text" id="nonce" name="nonce" [(ngModel)]="revokeResponse.nonce"
+                            readonly />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="transactionSignataire" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="le signataire de la transaction sur la blockchain Ethereum">Signataire (EOA) :
+                    </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="transactionSignataire" name="transactionSignataire"
+                            [(ngModel)]="revokeResponse.transactionSignataire" readonly />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="addrSmartContract" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="l'adresse du contrat intelligent deployé et exécuté sur Ethereum">Adresse du contrat
+                        inteligent :
+                    </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="addrSmartContract" name="addressContrat"
+                            [(ngModel)]="revokeResponse.addressContrat" readonly />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="totalTransactionGasUtilise" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="la quantité de gaz réellement consommée pour exécuter la transaction blockchain">Gaz
+                        réellement consommé pour la transaction : </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="totalTransactionGasUtilise" name="totalTransactionGasUtilise"
+                            [(ngModel)]="revokeResponse.totalTransactionGasUtilise" readonly />
+                    </div>
+                </div>
+                <div class="field grid">
+                    <label htmlFor="prixReelTransactionEther" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
+                        pTooltip="le prix réel de gaz payé pour la transaction blockchain">Prix réel du gaz payé pour la
+                        transaction (ETH) : </label>
+                    <div class="col-12 md:col-9">
+                        <input pInputText type="text" id="prixReelTransactionEther" name="prixReelTransactionEther"
+                            [(ngModel)]="revokeResponse.prixReelTransactionEther" readonly />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

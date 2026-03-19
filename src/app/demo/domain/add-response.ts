@@ -4,6 +4,7 @@
  * @author Canisius <canisiushien@gmail.com>
  */
 export interface IAddResponse {
+    publicKeyEncoded?: string, /** ajouter pour la fonction de revocationKey */
 
     documentName?: string, /** le nom du fichier numérique */
 
@@ -38,6 +39,8 @@ export interface IAddResponse {
 
 export class AddResponse implements IAddResponse {
     constructor(
+        publicKeyEncoded?: string,
+
         public documentName?: string,
 
         public idTransaction?: string,

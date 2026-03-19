@@ -89,7 +89,13 @@
                     <!-- clé publique associée -->
                     <div class="field grid col-12 md:col-12">
                         <label htmlFor="clePublique" class="col-12 mb-2 md:col-3 md:mb-0 font-bold"
-                            pTooltip="la clé publique cryptographique associée">Clé publique associée : </label>
+                            pTooltip="la clé publique cryptographique associée">Clé publique associée
+                            <!-- validite des cles de signatures utilisees -->
+                            <i *ngIf="demandeTransaction">
+                                <span *ngIf="verifResponse.keyStatus" style="color: black;">[invalide] : </span>
+                                <span *ngIf="!verifResponse.keyStatus" style="color: black;">[valide] : </span>
+                            </i>
+                        </label>
                         <div class="col-12 md:col-9">
                             <textarea rows="2" cols="60" pInputTextarea id="clePublic" name="publicKeyStored"
                                 [(ngModel)]="verifResponse.publicKeyStored" readonly></textarea>

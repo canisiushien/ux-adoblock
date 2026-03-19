@@ -56,6 +56,7 @@ export class RetrieveDocumentPublicComponent {
    * 5.notifier UI du resultat final de vérifications/authentification
    */
   retrieveDocument() {
+    const start = performance.now();
     const toDay = new Date();
     if (this.selectedFile) {
       //initialisation du formData
@@ -86,6 +87,7 @@ export class RetrieveDocumentPublicComponent {
             this.verifResponse.signedHashEncodedStored = receipt.signedHashEncoded;
             this.verifResponse.publicKeyStored = receipt.publicKeyEncoded;
             this.verifResponse.horodatage = receipt.timestamp + ' | ' + this.convertTimestampToDateLongFr(receipt.timestamp);
+            this.verifResponse.keyStatus = receipt.isKeyRevoked;
 
             //on appelle l'api de verifications de l'integrité et de l'authenticité
             this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(result => {
@@ -104,6 +106,12 @@ export class RetrieveDocumentPublicComponent {
                 detail: `Transaction réussie (hash: ${this.verifResponse.hashEncodedStored})`,
                 life: environment.alerteLife //en ms
               });
+
+
+              //mesure de temps de reponse
+              const end = performance.now();
+              const duration = end - start;
+              console.log(`Temps traitement retreiveDocument() après signature : ${duration.toFixed(2)} ms`);
             }, error => {//fin verifyDocumentFromEthereum()
               console.error("Erreur lors des verifications des hash et clé :", error);
             });//fin verifyDocumentFromEthereum()
@@ -123,6 +131,11 @@ export class RetrieveDocumentPublicComponent {
         console.error("Erreur de préparation de verification sur Ethereum :", error);
       });//fin prepareGetDocumentFromEthereum()
     }//fin if()
+
+    //mesure de temps de reponse
+    const end = performance.now();
+    const duration = end - start;
+    console.log(`Temps traitement retrieveDocument() avant signature : ${duration.toFixed(2)} ms`);
   }//fin retrieveDocument()
 
   //convertir un time = 1749165548 en format date = lundi 09 juin 2025 à 09:59:08 (UTC)

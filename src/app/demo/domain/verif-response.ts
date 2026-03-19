@@ -4,6 +4,7 @@
  * @author Canisius <canisiushien@gmail.com>
  */
 export interface IVerifResponse {
+    keyStatus?: boolean; /** le statut de la cle de signature valid/revoked ? */
 
     authenticated?: boolean; /** le doc est-il valide/authentique ? */
 
@@ -30,6 +31,8 @@ export interface IVerifResponse {
 
 export class VerifResponse implements IVerifResponse {
     constructor(
+        public keyStatus?: boolean,
+
         public authenticated?: boolean,
 
         public integrated?: boolean,

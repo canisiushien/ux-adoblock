@@ -13,6 +13,9 @@ export const environment = {
   //génère une paire de clés cryptographiques
   generateKeysPair: BASE_API + '/generate-keys',
 
+  //calcule les données necessaires pour la revocation de clés sur Eth
+  prepareRevokeToBlockchain: BASE_API + '/prepare-revoke-to-blockchain',
+
   //calcule les données necessaires du fichier qui doivent être stokées sur Eth
   prepareStoreToBlockchain: BASE_API + '/prepare-store-to-blockchain',
 

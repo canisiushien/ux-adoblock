@@ -87,6 +87,7 @@ export class RetrieveDocumentComponent {
             this.verifResponse.signedHashEncodedStored = receipt.signedHashEncoded;
             this.verifResponse.publicKeyStored = receipt.publicKeyEncoded;
             this.verifResponse.horodatage = receipt.timestamp + ' | ' + this.convertTimestampToDateLongFr(receipt.timestamp);
+            this.verifResponse.keyStatus = receipt.isKeyRevoked;
 
             //on appelle l'api de verifications de l'integrité et de l'authenticité
             this.documentService.verifyDocumentFromEthereum(this.verifResponse).subscribe(result => {
