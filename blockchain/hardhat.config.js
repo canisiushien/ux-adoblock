@@ -2,7 +2,7 @@ require("@nomicfoundation/hardhat-toolbox");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.28",
+  solidity: "0.8.34",
   paths: {
     //sources: "./blockchain/contracts"
     artifacts: "../src/assets/artifacts" // pour que l'ABI soit dispo dans Angular
